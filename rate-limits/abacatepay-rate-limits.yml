@@ -1,0 +1,56 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: AbacatePay
+providerId: abacatepay
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Brazil
+- FinTech
+- Developers
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  The AbacatePay v1 REST API authenticates with a Bearer API key and applies
+  per-account abuse-prevention rate limiting. Specific published numeric limits
+  (requests per minute/second per key) are not documented in the public API
+  reference and are not reconciled in this artifact. Clients should handle HTTP
+  429 responses and retry with backoff.
+notes: >-
+  No explicit numeric RPM/RPS limits are published on the public docs as of the
+  review date. Confirm any per-key throttling thresholds with AbacatePay support
+  during reconciliation.
+sources:
+- https://docs.abacatepay.com/pages/authentication
+- https://docs.abacatepay.com/pages/v1/introduction
+- https://docs.abacatepay.com
+responseCodes:
+  throttled: 429
+limits:
+- name: Requests Per Key
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Per-API-key abuse-prevention throttling; no published numeric value.
+- name: Withdrawals Per Month
+  scope: account
+  metric: transactions
+  limit: see provider documentation
+  notes: >-
+    Not a hard API throttle but a pricing tier boundary - the first 20
+    withdrawals per month are billed at a lower per-request fee.
+policies:
+- name: Bearer Authentication
+  description: All requests require a valid API key sent as a Bearer token; unauthenticated requests return 401.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter on 429 responses and honor any Retry-After header.
+- name: Idempotency
+  description: Use externalId on withdrawals and process webhooks idempotently to safely handle retries.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

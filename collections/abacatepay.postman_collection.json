@@ -1,0 +1,251 @@
+{
+  "info": {
+    "name": "AbacatePay API",
+    "description": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Authenticate with your API key as a Bearer token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.abacatepay.com/v1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "Create a new billing",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/billing/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["billing", "create"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"frequency\": \"ONE_TIME\",\n  \"methods\": [\"PIX\"],\n  \"products\": [\n    {\n      \"externalId\": \"prod-001\",\n      \"name\": \"Plano Pro\",\n      \"description\": \"Assinatura mensal\",\n      \"quantity\": 1,\n      \"price\": 2990\n    }\n  ],\n  \"returnUrl\": \"https://example.com/back\",\n  \"completionUrl\": \"https://example.com/thanks\",\n  \"customerId\": \"cust_abc123\",\n  \"allowCoupons\": true,\n  \"externalId\": \"order-001\"\n}"
+            },
+            "description": "Creates a billing (charge) backed by a shareable checkout URL."
+          }
+        },
+        {
+          "name": "List billings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/billing/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["billing", "list"]
+            },
+            "description": "Returns the list of billings for the authenticated store."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pix QR Code",
+      "item": [
+        {
+          "name": "Create a Pix QR Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pixQrCode/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["pixQrCode", "create"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1990,\n  \"expiresIn\": 3600,\n  \"description\": \"Pagamento do pedido 001\",\n  \"customer\": {\n    \"name\": \"Maria Silva\",\n    \"cellphone\": \"+5511999999999\",\n    \"email\": \"maria@example.com\",\n    \"taxId\": \"12345678900\"\n  }\n}"
+            },
+            "description": "Creates a dynamic Pix QR Code returning the BR Code and a base64 image."
+          }
+        },
+        {
+          "name": "Check Pix QR Code status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pixQrCode/check?id=pix_char_abc123",
+              "host": ["{{baseUrl}}"],
+              "path": ["pixQrCode", "check"],
+              "query": [
+                { "key": "id", "value": "pix_char_abc123" }
+              ]
+            },
+            "description": "Returns the current status and expiration of a Pix QR Code."
+          }
+        },
+        {
+          "name": "Simulate a Pix payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pixQrCode/simulate-payment?id=pix_char_abc123",
+              "host": ["{{baseUrl}}"],
+              "path": ["pixQrCode", "simulate-payment"],
+              "query": [
+                { "key": "id", "value": "pix_char_abc123" }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metadata\": {}\n}"
+            },
+            "description": "Simulates payment of a Pix QR Code (dev mode only)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "item": [
+        {
+          "name": "Create a new customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customer/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer", "create"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Silva\",\n  \"cellphone\": \"+5511999999999\",\n  \"email\": \"maria@example.com\",\n  \"taxId\": \"12345678900\"\n}"
+            },
+            "description": "Creates a customer (client)."
+          }
+        },
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customer/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer", "list"]
+            },
+            "description": "Returns the list of customers for the authenticated store."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coupon",
+      "item": [
+        {
+          "name": "Create a new coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupon/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["coupon", "create"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PROMO10\",\n  \"discount\": 10,\n  \"discountKind\": \"PERCENTAGE\",\n  \"notes\": \"10% de desconto\",\n  \"maxRedeems\": 100\n}"
+            },
+            "description": "Creates a discount coupon."
+          }
+        },
+        {
+          "name": "List coupons",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/coupon/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["coupon", "list"]
+            },
+            "description": "Returns the list of coupons for the authenticated store."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Withdraw",
+      "item": [
+        {
+          "name": "Create a new withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["withdraw", "create"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"externalId\": \"wd-001\",\n  \"method\": \"PIX\",\n  \"amount\": 5000,\n  \"pix\": {\n    \"type\": \"PIX\",\n    \"key\": \"maria@example.com\"\n  },\n  \"description\": \"Saque semanal\"\n}"
+            },
+            "description": "Requests a withdrawal (payout) to a Pix key."
+          }
+        },
+        {
+          "name": "Get a withdrawal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw/get?externalId=wd-001",
+              "host": ["{{baseUrl}}"],
+              "path": ["withdraw", "get"],
+              "query": [
+                { "key": "externalId", "value": "wd-001" }
+              ]
+            },
+            "description": "Retrieves a withdrawal transaction by external ID."
+          }
+        },
+        {
+          "name": "List withdrawals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/withdraw/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["withdraw", "list"]
+            },
+            "description": "Returns the list of withdrawal transactions for the authenticated store."
+          }
+        }
+      ]
+    }
+  ]
+}

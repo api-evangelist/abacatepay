@@ -1,0 +1,91 @@
+aid: abacatepay
+name: AbacatePay
+review:
+  question: Does AbacatePay expose a documented public WebSocket or streaming API?
+  answer: false
+  date: '2026-06-21'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    AbacatePay's only event-driven surface is outbound HTTP webhooks (the
+    provider POSTs JSON event notifications to a merchant-configured URL).
+    There is no documented WebSocket (ws://, wss://) or Server-Sent Events
+    (SSE) stream that a client subscribes to. Outbound webhooks alone do not
+    constitute an AsyncAPI streaming/subscribe surface under current API
+    Evangelist scope, so no AsyncAPI document was created. The webhook
+    contract is documented below for completeness.
+findings:
+  summary: |
+    AbacatePay publishes a synchronous REST API under
+    https://api.abacatepay.com/v1 authenticated with a Bearer API key. Its
+    asynchronous integration model is outbound webhooks: AbacatePay sends
+    HTTP POST event notifications to a merchant-configured endpoint. There is
+    no documented bidirectional or client-subscribed streaming transport
+    (no WebSocket, no SSE) as of the review date.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.abacatepay.com/v1
+      documented: true
+    - protocol: Webhooks
+      scheme: https
+      note: Outbound HTTP POST event callbacks to a merchant-configured URL, secured with a webhookSecret query string and an HMAC-SHA256 X-Webhook-Signature header. Not a client-subscribed stream.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in the AbacatePay v1 API reference or product pages as of the review date.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events streaming endpoint is documented.
+  endpointsConfirmedRest:
+    - POST https://api.abacatepay.com/v1/billing/create
+    - GET  https://api.abacatepay.com/v1/billing/list
+    - POST https://api.abacatepay.com/v1/pixQrCode/create
+    - GET  https://api.abacatepay.com/v1/pixQrCode/check
+    - POST https://api.abacatepay.com/v1/pixQrCode/simulate-payment
+    - POST https://api.abacatepay.com/v1/customer/create
+    - GET  https://api.abacatepay.com/v1/customer/list
+    - POST https://api.abacatepay.com/v1/coupon/create
+    - GET  https://api.abacatepay.com/v1/coupon/list
+    - POST https://api.abacatepay.com/v1/withdraw/create
+    - GET  https://api.abacatepay.com/v1/withdraw/get
+    - GET  https://api.abacatepay.com/v1/withdraw/list
+  webhooks:
+    transport: Outbound HTTP POST to a merchant-configured URL.
+    verification: webhookSecret query string parameter plus an HMAC-SHA256 signature in the X-Webhook-Signature header computed over the raw request body.
+    payloadShape: '{ event, devMode, data }'
+    events:
+      - billing.created
+      - billing.paid
+      - billing.refunded
+      - billing.failed
+      - subscription.created
+      - subscription.canceled
+    note: The exact event list can vary by the era an integration was built; process events idempotently.
+sources:
+  - url: https://docs.abacatepay.com/pages/v1/introduction
+    type: Documentation
+    note: Lists REST base URL https://api.abacatepay.com/v1; no WebSocket mentioned.
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+    note: All documented endpoints are HTTPS REST under /v1.
+  - url: https://docs.abacatepay.com/pages/v1/webhooks
+    type: Documentation
+    note: Describes outbound webhook events and webhookSecret + HMAC-SHA256 signature verification.
+  - url: https://docs.abacatepay.com/pages/authentication
+    type: Documentation
+    note: Bearer API key authentication; responses follow a {data, error} envelope.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No client-subscribed streaming protocol surface exists. AbacatePay's only
+    asynchronous mechanism is outbound webhooks, which is documented in the
+    Webhooks API entry in apis.yml and in this review's webhooks section. No
+    AsyncAPI document was authored because there is no WebSocket or SSE stream
+    to model.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

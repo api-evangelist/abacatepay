@@ -1,0 +1,127 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: AbacatePay
+providerId: abacatepay
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Brazil
+- FinTech
+- Developers
+- Plans
+description: >-
+  AbacatePay uses transparent, flat per-transaction pricing aimed at developers
+  and indie hackers. There are no monthly platform fees or subscription tiers to
+  use the API; you pay a fixed fee per successful Pix payment received, a
+  percentage-plus-fixed fee per approved credit card transaction, and a fixed
+  fee per paid boleto. Withdrawals (payouts) are priced per request with a
+  monthly free-then-flat structure. Funds received via Pix are available
+  immediately.
+notes: >-
+  Per-transaction rates are sourced from the AbacatePay public pricing page in
+  Brazilian Reais (BRL) and may change; values are not reconciled against a
+  contract or live account in this artifact. Verify current fees on the pricing
+  page during reconciliation.
+sources:
+- https://www.abacatepay.com/pricing
+- https://www.abacatepay.com/pix
+- https://docs.abacatepay.com
+plans:
+- id: abacatepay-pay-per-transaction
+  name: Pay Per Transaction
+  type: usage
+  description: >-
+    Flat per-transaction fees with no monthly platform or subscription cost.
+    Funds from Pix are available immediately.
+  entries:
+  - label: Pix Received
+    name: pix_received
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$0.80 per received Pix transaction
+    userMultiplied: false
+  - label: Pix QR Code Generation
+    name: pix_qrcode_generation
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$0.00 (no charge to generate a Pix QR Code)
+    userMultiplied: false
+  - label: Recurring Pix Installment
+    name: recurring_pix
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$0.80 per paid installment (no extra subscription fee)
+    userMultiplied: false
+  - label: Credit Card
+    name: credit_card
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: 3.5% + R$0.60 per approved transaction
+    userMultiplied: false
+  - label: Boleto
+    name: boleto
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$2.50 per paid boleto (R$0.80 if paid via embedded Pix QR Code)
+    userMultiplied: false
+  elements:
+  - name: Billing and Charges
+  - name: Pix QR Code
+  - name: Checkout
+  - name: Customers
+  - name: Coupons
+- id: abacatepay-withdraw
+  name: Withdrawals
+  type: usage
+  description: >-
+    Per-request payout pricing with a monthly free-then-flat structure.
+  entries:
+  - label: Withdrawals 1-20 per month
+    name: withdraw_first_20
+    type: usage
+    metric: transactions
+    limit: 20
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$0.80 per withdrawal (first 20 each month)
+    userMultiplied: false
+  - label: Withdrawals 21+ per month
+    name: withdraw_after_20
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: R$2.50 per withdrawal (from the 21st onward)
+    userMultiplied: false
+  elements:
+  - name: Withdraw API
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

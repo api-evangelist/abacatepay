@@ -1,0 +1,152 @@
+aid: abacatepay
+url: https://raw.githubusercontent.com/api-evangelist/abacatepay/refs/heads/main/apis.yml
+name: AbacatePay
+kind: company
+description: AbacatePay is a Brazilian payment gateway built for developers and indie
+  hackers, focused on instant Pix payments. Its REST API lets you create billings
+  and charges, generate and check Pix QR Codes, manage customers and coupons, request
+  withdrawals, and receive webhooks - charging a flat per-transaction Pix fee with
+  funds available immediately.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Payments
+- Pix
+- Brazil
+- FinTech
+- Developers
+created: '2026-06-21'
+modified: '2026-06-21'
+specificationVersion: '0.19'
+apis:
+- aid: abacatepay:abacatepay-billing-api
+  name: AbacatePay Billing and Charges API
+  tags:
+  - Billing
+  - Charges
+  - Checkout
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/payment/create
+    type: Documentation
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+  - url: openapi/abacatepay-openapi.yml
+    type: OpenAPI
+  - url: collections/abacatepay.postman_collection.json
+    type: PostmanCollection
+  description: Create one-time and recurring billings (charges) backed by a shareable
+    checkout URL, supporting Pix and other payment methods, products, coupons, and
+    customer association, plus listing of existing billings.
+- aid: abacatepay:abacatepay-pix-qrcode-api
+  name: AbacatePay Pix QR Code API
+  tags:
+  - Pix
+  - QR Code
+  - Instant Payments
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/payment/create
+    type: Documentation
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+  - url: openapi/abacatepay-openapi.yml
+    type: OpenAPI
+  - url: collections/abacatepay.postman_collection.json
+    type: PostmanCollection
+  description: Create dynamic Pix QR Codes (BR Code copy-and-paste and base64 image),
+    check payment status, and simulate payments in dev mode for instant Pix collection.
+- aid: abacatepay:abacatepay-customers-api
+  name: AbacatePay Customers API
+  tags:
+  - Customers
+  - Clients
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/client/create
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/client/create
+    type: Documentation
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+  - url: openapi/abacatepay-openapi.yml
+    type: OpenAPI
+  - url: collections/abacatepay.postman_collection.json
+    type: PostmanCollection
+  description: Create and list customers (clients) with name, cellphone, email, and
+    Brazilian tax ID (CPF/CNPJ) for association with billings and charges.
+- aid: abacatepay:abacatepay-coupons-api
+  name: AbacatePay Coupons API
+  tags:
+  - Coupons
+  - Discounts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/reference/introduction
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: Documentation
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+  - url: openapi/abacatepay-openapi.yml
+    type: OpenAPI
+  - url: collections/abacatepay.postman_collection.json
+    type: PostmanCollection
+  description: Create and list discount coupons with percentage or fixed-amount discount
+    kinds, redemption limits, and metadata for use in billings and checkout.
+- aid: abacatepay:abacatepay-withdraw-api
+  name: AbacatePay Withdraw API
+  tags:
+  - Withdraw
+  - Payout
+  - Pix
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/reference/introduction
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: Documentation
+  - url: https://docs.abacatepay.com/pages/reference/introduction
+    type: APIReference
+  - url: openapi/abacatepay-openapi.yml
+    type: OpenAPI
+  - url: collections/abacatepay.postman_collection.json
+    type: PostmanCollection
+  description: Request withdrawals (payouts) of available balance to a Pix key, and
+    retrieve or list withdrawal transactions by external ID.
+- aid: abacatepay:abacatepay-webhooks-api
+  name: AbacatePay Webhooks
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  properties:
+  - url: https://docs.abacatepay.com/pages/v1/webhooks
+    type: Documentation
+  description: Outbound webhook event notifications (billing.created, billing.paid,
+    billing.refunded, billing.failed, subscription.created, subscription.canceled)
+    delivered with a webhookSecret query string and HMAC-SHA256 signature for verification.
+common:
+- type: GitHubOrganization
+  url: https://github.com/AbacatePay
+- type: LinkedIn
+  url: https://www.linkedin.com/company/abacatepay
+- type: Website
+  url: https://www.abacatepay.com
+- type: Documentation
+  url: https://docs.abacatepay.com
+- type: Plans
+  url: plans/abacatepay-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/abacatepay-rate-limits.yml
+- type: FinOps
+  url: finops/abacatepay-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

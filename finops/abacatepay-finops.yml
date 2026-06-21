@@ -1,0 +1,105 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: AbacatePay
+providerId: abacatepay
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Brazil
+- FinTech
+- Developers
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of AbacatePay spend. AbacatePay bills flat per-transaction fees:
+  a fixed fee per received Pix payment (and per recurring Pix installment), a
+  percentage-plus-fixed fee per approved credit card transaction, a fixed fee
+  per paid boleto, and a per-request withdrawal fee that steps up after the
+  first 20 withdrawals each month. Generating a Pix QR Code is free; cost is
+  incurred only on successful payments and on payouts. All amounts are in
+  Brazilian Reais (BRL).
+notes: >-
+  Per-transaction rates are sourced from the public pricing page and are not
+  reconciled against a live account or invoice in this artifact. Verify against
+  the AbacatePay pricing page during reconciliation.
+sources:
+- https://www.abacatepay.com/pricing
+- https://www.abacatepay.com/pix
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: AbacatePay
+serviceCategory: Payment Processing
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Per Transaction
+  billingCurrency: BRL
+  chargeCategories:
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: AbacatePay
+  ServiceCategory: Payment Processing
+  ProviderName: AbacatePay
+  PublisherName: AbacatePay
+  InvoiceIssuerName: AbacatePay
+  BillingCurrency: BRL
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: pix_transactions
+  description: Received Pix payments billed at a flat fee per successful transaction.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - method
+- name: recurring_pix_installments
+  description: Paid recurring Pix installments billed at the standard flat Pix fee.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - subscription
+- name: card_transactions
+  description: Approved credit card transactions billed as a percentage plus a fixed fee.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - method
+- name: boleto_transactions
+  description: Paid boletos billed at a flat fee per boleto, reduced when paid via embedded Pix QR Code.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - method
+- name: withdrawals
+  description: Withdrawal (payout) requests billed per request, stepping up after the first 20 per month.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - month
+principles:
+- name: Visibility
+  description: Reconcile billings, Pix QR Code payments, and withdrawals against the store balance (available, pending, blocked) via the API.
+- name: Allocation
+  description: Tag billings and withdrawals with externalId and metadata to map payment costs to internal workloads, teams, or customers.
+- name: Optimization
+  description: Prefer Pix over card to minimize per-transaction fees; batch payouts to stay within the cheaper first-20-withdrawals-per-month tier; steer boleto payers to the embedded Pix QR Code.
+- name: Accountability
+  description: Review monthly transaction-fee and withdrawal-fee totals against revenue; assign owners per payment integration.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

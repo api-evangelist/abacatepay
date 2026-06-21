@@ -1,0 +1,213 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay API",
+    "version": "v1",
+    "description": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Authenticate with your API key as a Bearer token."
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    },
+    "baseUrl": "https://api.abacatepay.com/v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Billing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new billing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/billing/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"frequency\": \"ONE_TIME\",\n  \"methods\": [\"PIX\"],\n  \"products\": [{\"externalId\": \"prod-001\", \"name\": \"Plano Pro\", \"quantity\": 1, \"price\": 2990}],\n  \"returnUrl\": \"https://example.com/back\",\n  \"completionUrl\": \"https://example.com/thanks\"\n}"
+            }
+          },
+          "docs": "Creates a billing (charge) backed by a shareable checkout URL."
+        },
+        {
+          "info": {
+            "name": "List billings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/billing/list"
+          },
+          "docs": "Returns the list of billings for the authenticated store."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Pix QR Code",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a Pix QR Code",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"amount\": 1990,\n  \"expiresIn\": 3600,\n  \"description\": \"Pagamento do pedido 001\"\n}"
+            }
+          },
+          "docs": "Creates a dynamic Pix QR Code returning the BR Code and a base64 image."
+        },
+        {
+          "info": {
+            "name": "Check Pix QR Code status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/check?id=pix_char_abc123"
+          },
+          "docs": "Returns the current status and expiration of a Pix QR Code."
+        },
+        {
+          "info": {
+            "name": "Simulate a Pix payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/simulate-payment?id=pix_char_abc123",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"metadata\": {}\n}"
+            }
+          },
+          "docs": "Simulates payment of a Pix QR Code (dev mode only)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/customer/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"Maria Silva\",\n  \"cellphone\": \"+5511999999999\",\n  \"email\": \"maria@example.com\",\n  \"taxId\": \"12345678900\"\n}"
+            }
+          },
+          "docs": "Creates a customer (client)."
+        },
+        {
+          "info": {
+            "name": "List customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/customer/list"
+          },
+          "docs": "Returns the list of customers for the authenticated store."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Coupon",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new coupon",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/coupon/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"code\": \"PROMO10\",\n  \"discount\": 10,\n  \"discountKind\": \"PERCENTAGE\",\n  \"notes\": \"10% de desconto\",\n  \"maxRedeems\": 100\n}"
+            }
+          },
+          "docs": "Creates a discount coupon."
+        },
+        {
+          "info": {
+            "name": "List coupons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/coupon/list"
+          },
+          "docs": "Returns the list of coupons for the authenticated store."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Withdraw",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/withdraw/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"externalId\": \"wd-001\",\n  \"method\": \"PIX\",\n  \"amount\": 5000,\n  \"pix\": {\"type\": \"PIX\", \"key\": \"maria@example.com\"}\n}"
+            }
+          },
+          "docs": "Requests a withdrawal (payout) to a Pix key."
+        },
+        {
+          "info": {
+            "name": "Get a withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/withdraw/get?externalId=wd-001"
+          },
+          "docs": "Retrieves a withdrawal transaction by external ID."
+        },
+        {
+          "info": {
+            "name": "List withdrawals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/withdraw/list"
+          },
+          "docs": "Returns the list of withdrawal transactions for the authenticated store."
+        }
+      ]
+    }
+  ]
+}
