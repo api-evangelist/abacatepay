@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/abacatepay-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: API Key
+  description: 'Authenticate with your AbacatePay API key as a Bearer token: `Authorization:
+    Bearer <abacatepay-api-key>`.'
+  sources:
+  - openapi/abacatepay-openapi.yml

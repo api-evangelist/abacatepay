@@ -133,6 +133,10 @@ apis:
     billing.refunded, billing.failed, subscription.created, subscription.canceled)
     delivered with a webhookSecret query string and HMAC-SHA256 signature for verification.
 common:
+- type: DomainSecurity
+  url: security/abacatepay-domain-security.yml
+- type: Authentication
+  url: authentication/abacatepay-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/AbacatePay
 - type: LinkedIn
