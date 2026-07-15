@@ -133,6 +133,8 @@ apis:
     billing.refunded, billing.failed, subscription.created, subscription.canceled)
     delivered with a webhookSecret query string and HMAC-SHA256 signature for verification.
 common:
+- type: AgenticAccess
+  url: agentic-access/abacatepay-agentic-access.yml
 - type: DomainSecurity
   url: security/abacatepay-domain-security.yml
 - type: Authentication
