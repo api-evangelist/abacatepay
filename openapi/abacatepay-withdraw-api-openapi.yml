@@ -1,0 +1,179 @@
+openapi: 3.0.1
+info:
+  title: AbacatePay Billing Withdraw API
+  description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
+  termsOfService: https://www.abacatepay.com/termos
+  contact:
+    name: AbacatePay Support
+    url: https://docs.abacatepay.com
+  version: v1
+servers:
+- url: https://api.abacatepay.com/v1
+  description: AbacatePay API v1 production server
+security:
+- bearerAuth: []
+tags:
+- name: Withdraw
+  description: Create, retrieve, and list withdrawals (payouts) to a Pix key.
+paths:
+  /withdraw/create:
+    post:
+      operationId: createWithdraw
+      tags:
+      - Withdraw
+      summary: Create a new withdrawal
+      description: Requests a withdrawal (payout) of available balance to a Pix key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWithdrawRequest'
+      responses:
+        '200':
+          description: Withdrawal created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /withdraw/get:
+    get:
+      operationId: getWithdraw
+      tags:
+      - Withdraw
+      summary: Get a withdrawal
+      description: Retrieves a withdrawal transaction by external ID.
+      parameters:
+      - name: externalId
+        in: query
+        required: true
+        description: The external identifier supplied when the withdrawal was created.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Withdrawal found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Withdrawal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /withdraw/list:
+    get:
+      operationId: listWithdraws
+      tags:
+      - Withdraw
+      summary: List withdrawals
+      description: Returns the list of withdrawal transactions for the authenticated store.
+      responses:
+        '200':
+          description: A list of withdrawals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                  error:
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        externalId:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+          - FAILED
+        kind:
+          type: string
+          description: Transaction kind (e.g. WITHDRAW).
+        amount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        data:
+          nullable: true
+        error:
+          type: string
+          description: Human-readable error message.
+    CreateWithdrawRequest:
+      type: object
+      required:
+      - externalId
+      - method
+      - amount
+      - pix
+      properties:
+        externalId:
+          type: string
+          description: Your identifier for the withdrawal, used for idempotency and lookup.
+        method:
+          type: string
+          enum:
+          - PIX
+        amount:
+          type: integer
+          description: Amount to withdraw in cents (BRL centavos).
+        pix:
+          $ref: '#/components/schemas/PixKey'
+        description:
+          type: string
+    WithdrawResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Transaction'
+        error:
+          nullable: true
+    PixKey:
+      type: object
+      required:
+      - type
+      - key
+      properties:
+        type:
+          type: string
+          enum:
+          - PIX
+        key:
+          type: string
+          description: The destination Pix key (CPF, CNPJ, email, phone, or random key).
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'Authenticate with your AbacatePay API key as a Bearer token: `Authorization: Bearer <abacatepay-api-key>`.'

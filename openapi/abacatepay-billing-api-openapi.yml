@@ -1,0 +1,212 @@
+openapi: 3.0.1
+info:
+  title: AbacatePay Billing API
+  description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
+  termsOfService: https://www.abacatepay.com/termos
+  contact:
+    name: AbacatePay Support
+    url: https://docs.abacatepay.com
+  version: v1
+servers:
+- url: https://api.abacatepay.com/v1
+  description: AbacatePay API v1 production server
+security:
+- bearerAuth: []
+tags:
+- name: Billing
+  description: Create and list billings (charges) with a shareable checkout URL.
+paths:
+  /billing/create:
+    post:
+      operationId: createBilling
+      tags:
+      - Billing
+      summary: Create a new billing
+      description: Creates a billing (charge) backed by a shareable checkout URL, supporting Pix and other payment methods, products, coupons, and customer association.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingRequest'
+      responses:
+        '200':
+          description: Billing created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /billing/list:
+    get:
+      operationId: listBillings
+      tags:
+      - Billing
+      summary: List billings
+      description: Returns the list of billings created for the authenticated store.
+      responses:
+        '200':
+          description: A list of billings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Billing'
+                  error:
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    CreateBillingRequest:
+      type: object
+      required:
+      - frequency
+      - methods
+      - products
+      - returnUrl
+      - completionUrl
+      properties:
+        frequency:
+          type: string
+          description: Billing frequency.
+          enum:
+          - ONE_TIME
+          - MULTIPLE_PAYMENTS
+        methods:
+          type: array
+          items:
+            type: string
+            enum:
+            - PIX
+          description: Accepted payment methods.
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        returnUrl:
+          type: string
+          format: uri
+          description: URL the customer is sent to when they click "back".
+        completionUrl:
+          type: string
+          format: uri
+          description: URL the customer is redirected to after payment.
+        customerId:
+          type: string
+          description: Existing customer ID to associate with the billing.
+        customer:
+          $ref: '#/components/schemas/CustomerData'
+        allowCoupons:
+          type: boolean
+        coupons:
+          type: array
+          items:
+            type: string
+        externalId:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Product:
+      type: object
+      required:
+      - externalId
+      - name
+      - quantity
+      - price
+      properties:
+        externalId:
+          type: string
+          description: Your identifier for the product.
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        price:
+          type: integer
+          description: Unit price in cents (BRL centavos).
+    Error:
+      type: object
+      properties:
+        data:
+          nullable: true
+        error:
+          type: string
+          description: Human-readable error message.
+    BillingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Billing'
+        error:
+          nullable: true
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+    Billing:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+          description: Shareable checkout URL.
+        amount:
+          type: integer
+          description: Total amount in cents.
+        status:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+        frequency:
+          type: string
+        methods:
+          type: array
+          items:
+            type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'Authenticate with your AbacatePay API key as a Bearer token: `Authorization: Bearer <abacatepay-api-key>`.'

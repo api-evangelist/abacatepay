@@ -1,0 +1,199 @@
+openapi: 3.0.1
+info:
+  title: AbacatePay Billing Pix QR Code API
+  description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
+  termsOfService: https://www.abacatepay.com/termos
+  contact:
+    name: AbacatePay Support
+    url: https://docs.abacatepay.com
+  version: v1
+servers:
+- url: https://api.abacatepay.com/v1
+  description: AbacatePay API v1 production server
+security:
+- bearerAuth: []
+tags:
+- name: Pix QR Code
+  description: Create, check, and simulate dynamic Pix QR Code payments.
+paths:
+  /pixQrCode/create:
+    post:
+      operationId: createPixQrCode
+      tags:
+      - Pix QR Code
+      summary: Create a Pix QR Code
+      description: Creates a dynamic Pix QR Code returning the BR Code (copy-and-paste string) and a base64-encoded QR Code image for immediate collection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePixQrCodeRequest'
+      responses:
+        '200':
+          description: Pix QR Code created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PixQrCodeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /pixQrCode/check:
+    get:
+      operationId: checkPixQrCode
+      tags:
+      - Pix QR Code
+      summary: Check Pix QR Code status
+      description: Returns the current status and expiration of a Pix QR Code.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: The Pix QR Code identifier.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Pix QR Code status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/PixStatus'
+                      expiresAt:
+                        type: string
+                        format: date-time
+                  error:
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /pixQrCode/simulate-payment:
+    post:
+      operationId: simulatePixPayment
+      tags:
+      - Pix QR Code
+      summary: Simulate a Pix payment
+      description: Simulates payment of a Pix QR Code. Available in dev mode only, for testing webhooks and payment flows.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: The Pix QR Code identifier.
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metadata:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '200':
+          description: Payment simulated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PixQrCodeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    PixQrCodeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PixQrCode'
+        error:
+          nullable: true
+    PixQrCode:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: integer
+        status:
+          $ref: '#/components/schemas/PixStatus'
+        brCode:
+          type: string
+          description: Pix copy-and-paste payload (BR Code).
+        brCodeBase64:
+          type: string
+          description: Base64-encoded QR Code image.
+        expiresAt:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        data:
+          nullable: true
+        error:
+          type: string
+          description: Human-readable error message.
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+    PixStatus:
+      type: string
+      enum:
+      - PENDING
+      - PAID
+      - EXPIRED
+      - CANCELLED
+      - REFUNDED
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+    CreatePixQrCodeRequest:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: integer
+          description: Amount to charge in cents (BRL centavos).
+        expiresIn:
+          type: integer
+          description: Seconds until the QR Code expires.
+        description:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CustomerData'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'Authenticate with your AbacatePay API key as a Bearer token: `Authorization: Bearer <abacatepay-api-key>`.'
