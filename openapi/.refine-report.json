@@ -1,0 +1,22 @@
+{
+  "provider": "abacatepay",
+  "sources": [
+    "abacatepay-billing-api-openapi.yml",
+    "abacatepay-coupon-api-openapi.yml",
+    "abacatepay-customer-api-openapi.yml",
+    "abacatepay-pix-qr-code-api-openapi.yml",
+    "abacatepay-withdraw-api-openapi.yml"
+  ],
+  "outputs": [
+    "abacatepay-billing-api-openapi.yml",
+    "abacatepay-coupon-api-openapi.yml",
+    "abacatepay-customer-api-openapi.yml",
+    "abacatepay-pix-qr-code-api-openapi.yml",
+    "abacatepay-withdraw-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
