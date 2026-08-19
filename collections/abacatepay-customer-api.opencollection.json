@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay Billing Customer API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/customer/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a customer (client) to associate with billings and charges."
+        },
+        {
+          "info": {
+            "name": "List customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/customer/list"
+          },
+          "docs": "Returns the list of customers for the authenticated store."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

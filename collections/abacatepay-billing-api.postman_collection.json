@@ -1,0 +1,318 @@
+{
+  "item": [
+    {
+      "id": "878c7e36-461a-4a7a-8947-f9f9c1c18e6c",
+      "name": "Billing",
+      "description": {
+        "content": "Create and list billings (charges) with a shareable checkout URL.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0a0f5024-d5c1-4ab4-a792-770398c2777b",
+          "name": "Create a new billing",
+          "request": {
+            "name": "Create a new billing",
+            "description": {
+              "content": "Creates a billing (charge) backed by a shareable checkout URL, supporting Pix and other payment methods, products, coupons, and customer association.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "billing",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"frequency\": \"<string>\",\n  \"methods\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"products\": [\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"returnUrl\": \"<uri>\",\n  \"completionUrl\": \"<uri>\",\n  \"customerId\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"allowCoupons\": \"<boolean>\",\n  \"coupons\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"externalId\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8485,\n    \"key_1\": 551.7261882218694,\n    \"key_2\": 132\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "52c7d26b-7370-474f-8090-0428b113bc09",
+              "name": "Billing created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"frequency\": \"<string>\",\n  \"methods\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"products\": [\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"returnUrl\": \"<uri>\",\n  \"completionUrl\": \"<uri>\",\n  \"customerId\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"allowCoupons\": \"<boolean>\",\n  \"coupons\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"externalId\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8111\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"url\": \"https://iLrz.piczFafSUY3cA,gd-DHqh0KJDfUVgwb-YAzZNbK1TYj\",\n    \"amount\": 1972,\n    \"status\": \"PAID\",\n    \"frequency\": \"string\",\n    \"methods\": [\n      \"string\",\n      \"string\"\n    ],\n    \"products\": [\n      {\n        \"externalId\": \"<string>\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<integer>\",\n        \"description\": \"<string>\"\n      },\n      {\n        \"externalId\": \"<string>\",\n        \"name\": \"<string>\",\n        \"quantity\": \"<integer>\",\n        \"price\": \"<integer>\",\n        \"description\": \"<string>\"\n      }\n    ],\n    \"metadata\": {\n      \"key_0\": 6881\n    }\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "33a36429-e72b-441f-a046-6d3f6e465b1d",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"frequency\": \"<string>\",\n  \"methods\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"products\": [\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"returnUrl\": \"<uri>\",\n  \"completionUrl\": \"<uri>\",\n  \"customerId\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"allowCoupons\": \"<boolean>\",\n  \"coupons\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"externalId\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8111\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5eae68aa-5c53-4ac8-8068-091d88612e39",
+          "name": "List billings",
+          "request": {
+            "name": "List billings",
+            "description": {
+              "content": "Returns the list of billings created for the authenticated store.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "billing",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "40a07bbf-1c93-452b-99fa-b5f187b83358",
+              "name": "A list of billings",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"url\": \"http://FdSHpsIwarhifnIdktjFIrc.qmojtzbxJWJqdnnGskbYf8xJBTM6E6hQEDGBNB\",\n      \"amount\": 231,\n      \"status\": \"EXPIRED\",\n      \"frequency\": \"string\",\n      \"methods\": [\n        \"string\",\n        \"string\"\n      ],\n      \"products\": [\n        {\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"quantity\": \"<integer>\",\n          \"price\": \"<integer>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"quantity\": \"<integer>\",\n          \"price\": \"<integer>\",\n          \"description\": \"<string>\"\n        }\n      ],\n      \"metadata\": {\n        \"key_0\": false,\n        \"key_1\": false,\n        \"key_2\": true,\n        \"key_3\": 9073,\n        \"key_4\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"url\": \"http://LjYZJofA.uwoZ1sFFjf\",\n      \"amount\": 8532,\n      \"status\": \"EXPIRED\",\n      \"frequency\": \"string\",\n      \"methods\": [\n        \"string\",\n        \"string\"\n      ],\n      \"products\": [\n        {\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"quantity\": \"<integer>\",\n          \"price\": \"<integer>\",\n          \"description\": \"<string>\"\n        },\n        {\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"quantity\": \"<integer>\",\n          \"price\": \"<integer>\",\n          \"description\": \"<string>\"\n        }\n      ],\n      \"metadata\": {\n        \"key_0\": 5730,\n        \"key_1\": 5484\n      }\n    }\n  ],\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3f768d88-f3ed-404f-9627-546abd21eb54",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "billing",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.abacatepay.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "015fe914-2b20-4242-bf6e-b7de6b9188f0",
+    "name": "AbacatePay Billing API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.\n\nContact Support:\n Name: AbacatePay Support",
+      "type": "text/plain"
+    }
+  }
+}

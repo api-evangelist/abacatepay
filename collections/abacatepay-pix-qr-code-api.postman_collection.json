@@ -1,0 +1,505 @@
+{
+  "item": [
+    {
+      "id": "d8b8a86e-2035-41ae-9456-482f14749fe2",
+      "name": "Pix QR Code",
+      "description": {
+        "content": "Create, check, and simulate dynamic Pix QR Code payments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1d5b19e-a6f4-4764-ada1-b958a32d2edd",
+          "name": "Create a Pix QR Code",
+          "request": {
+            "name": "Create a Pix QR Code",
+            "description": {
+              "content": "Creates a dynamic Pix QR Code returning the BR Code (copy-and-paste string) and a base64-encoded QR Code image for immediate collection.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "pixQrCode",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<integer>\",\n  \"expiresIn\": \"<integer>\",\n  \"description\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"metadata\": {\n    \"key_0\": 3592.2954523816406\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "df0ed585-3b50-459d-9818-ab878955b0ca",
+              "name": "Pix QR Code created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<integer>\",\n  \"expiresIn\": \"<integer>\",\n  \"description\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"amount\": 918,\n    \"status\": \"CANCELLED\",\n    \"brCode\": \"string\",\n    \"brCodeBase64\": \"string\",\n    \"expiresAt\": \"2019-05-29T14:34:43.161Z\",\n    \"metadata\": {\n      \"key_0\": 5630\n    }\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cc0549b9-2b70-4325-bd6d-14c5681e2d7b",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": \"<integer>\",\n  \"expiresIn\": \"<integer>\",\n  \"description\": \"<string>\",\n  \"customer\": {\n    \"name\": \"<string>\",\n    \"cellphone\": \"<string>\",\n    \"email\": \"<email>\",\n    \"taxId\": \"<string>\"\n  },\n  \"metadata\": {\n    \"key_0\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "db948341-6e83-4a16-bf29-c1389923c0c8",
+          "name": "Check Pix QR Code status",
+          "request": {
+            "name": "Check Pix QR Code status",
+            "description": {
+              "content": "Returns the current status and expiration of a Pix QR Code.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "pixQrCode",
+                "check"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "(Required) The Pix QR Code identifier."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "df9f520a-b393-4fae-827b-a0ce1cccf579",
+              "name": "Pix QR Code status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "check"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"status\": \"REFUNDED\",\n    \"expiresAt\": \"1953-04-23T21:42:35.275Z\"\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8a42487-3c2c-4a2a-a33d-601b8f3cd66c",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "check"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d7ad40d1-048f-4432-9d50-6cb193e37616",
+          "name": "Simulate a Pix payment",
+          "request": {
+            "name": "Simulate a Pix payment",
+            "description": {
+              "content": "Simulates payment of a Pix QR Code. Available in dev mode only, for testing webhooks and payment flows.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "pixQrCode",
+                "simulate-payment"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<string>",
+                  "description": "(Required) The Pix QR Code identifier."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metadata\": {\n    \"key_0\": false\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "99e91b83-24af-429a-a9cc-90678473ed7c",
+              "name": "Payment simulated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "simulate-payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"metadata\": {\n    \"key_0\": false,\n    \"key_1\": 3277.756491044039,\n    \"key_2\": 6982.743796446954,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"amount\": 918,\n    \"status\": \"CANCELLED\",\n    \"brCode\": \"string\",\n    \"brCodeBase64\": \"string\",\n    \"expiresAt\": \"2019-05-29T14:34:43.161Z\",\n    \"metadata\": {\n      \"key_0\": 5630\n    }\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0a4010e0-b453-4646-b587-eb16a0da9aa3",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "pixQrCode",
+                    "simulate-payment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"metadata\": {\n    \"key_0\": false,\n    \"key_1\": 3277.756491044039,\n    \"key_2\": 6982.743796446954,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.abacatepay.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "434846be-9bcd-4c52-a01c-72e276736ce7",
+    "name": "AbacatePay Billing Pix QR Code API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.\n\nContact Support:\n Name: AbacatePay Support",
+      "type": "text/plain"
+    }
+  }
+}

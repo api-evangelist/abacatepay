@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay Billing Pix QR Code API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pix QR Code",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a Pix QR Code",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a dynamic Pix QR Code returning the BR Code (copy-and-paste string) and a base64-encoded QR Code image for immediate collection."
+        },
+        {
+          "info": {
+            "name": "Check Pix QR Code status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/check",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "The Pix QR Code identifier."
+              }
+            ]
+          },
+          "docs": "Returns the current status and expiration of a Pix QR Code."
+        },
+        {
+          "info": {
+            "name": "Simulate a Pix payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/pixQrCode/simulate-payment",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "The Pix QR Code identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulates payment of a Pix QR Code. Available in dev mode only, for testing webhooks and payment flows."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

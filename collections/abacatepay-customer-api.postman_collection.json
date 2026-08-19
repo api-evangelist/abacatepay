@@ -1,0 +1,318 @@
+{
+  "item": [
+    {
+      "id": "31dad5ec-22c6-4c64-bf33-665a4c437776",
+      "name": "Customer",
+      "description": {
+        "content": "Create and list customers (clients).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "462940af-d9b2-4aea-99fd-92dc22d2da47",
+          "name": "Create a new customer",
+          "request": {
+            "name": "Create a new customer",
+            "description": {
+              "content": "Creates a customer (client) to associate with billings and charges.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customer",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"cellphone\": \"<string>\",\n  \"email\": \"<email>\",\n  \"taxId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e8812ebf-533e-468b-93ae-78bcccaa6f6f",
+              "name": "Customer created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customer",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"cellphone\": \"<string>\",\n  \"email\": \"<email>\",\n  \"taxId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"metadata\": {\n      \"name\": \"string\",\n      \"cellphone\": \"string\",\n      \"email\": \"KV20HvsNBM2i@vjylXmBZ.hfb\",\n      \"taxId\": \"string\"\n    }\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5b0d7020-4fa9-47e4-98fc-a839994b23ad",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customer",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"cellphone\": \"<string>\",\n  \"email\": \"<email>\",\n  \"taxId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d48fd322-42f3-47e9-96c0-cd006f3d5c16",
+          "name": "List customers",
+          "request": {
+            "name": "List customers",
+            "description": {
+              "content": "Returns the list of customers for the authenticated store.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customer",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "19f0a70a-56ff-45d6-86cf-9987433368fe",
+              "name": "A list of customers",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customer",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"metadata\": {\n        \"name\": \"string\",\n        \"cellphone\": \"string\",\n        \"email\": \"hd4@vZEILgLpjjViYTfAYFqHWks.lfo\",\n        \"taxId\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"metadata\": {\n        \"name\": \"string\",\n        \"cellphone\": \"string\",\n        \"email\": \"pTLoFVuQZRgOEiq@msDemC.sj\",\n        \"taxId\": \"string\"\n      }\n    }\n  ],\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e34e25ec-4e83-478e-91ca-fbc19b7f2dc3",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customer",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.abacatepay.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4f5ff4ef-0b5d-4354-be63-00345277936c",
+    "name": "AbacatePay Billing Customer API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.\n\nContact Support:\n Name: AbacatePay Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay Billing Withdraw API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Withdraw",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/withdraw/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a withdrawal (payout) of available balance to a Pix key."
+        },
+        {
+          "info": {
+            "name": "Get a withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/withdraw/get",
+            "params": [
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "The external identifier supplied when the withdrawal was created."
+              }
+            ]
+          },
+          "docs": "Retrieves a withdrawal transaction by external ID."
+        },
+        {
+          "info": {
+            "name": "List withdrawals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/withdraw/list"
+          },
+          "docs": "Returns the list of withdrawal transactions for the authenticated store."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay Billing API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Billing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new billing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/billing/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a billing (charge) backed by a shareable checkout URL, supporting Pix and other payment methods, products, coupons, and customer association."
+        },
+        {
+          "info": {
+            "name": "List billings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/billing/list"
+          },
+          "docs": "Returns the list of billings created for the authenticated store."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

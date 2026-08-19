@@ -1,0 +1,508 @@
+{
+  "item": [
+    {
+      "id": "69b07510-5055-4b71-8372-43980d87c78a",
+      "name": "Withdraw",
+      "description": {
+        "content": "Create, retrieve, and list withdrawals (payouts) to a Pix key.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b2b89aa6-ac7f-46f9-9f4a-79f10b3d1914",
+          "name": "Create a new withdrawal",
+          "request": {
+            "name": "Create a new withdrawal",
+            "description": {
+              "content": "Requests a withdrawal (payout) of available balance to a Pix key.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "withdraw",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"externalId\": \"<string>\",\n  \"method\": \"<string>\",\n  \"amount\": \"<integer>\",\n  \"pix\": {\n    \"type\": \"<string>\",\n    \"key\": \"<string>\"\n  },\n  \"description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "423aea89-a9d3-42f9-ab76-e6d23a2e256d",
+              "name": "Withdrawal created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"<string>\",\n  \"method\": \"<string>\",\n  \"amount\": \"<integer>\",\n  \"pix\": {\n    \"type\": \"<string>\",\n    \"key\": \"<string>\"\n  },\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"externalId\": \"string\",\n    \"status\": \"COMPLETED\",\n    \"kind\": \"string\",\n    \"amount\": 6318,\n    \"createdAt\": \"2025-07-05T15:22:52.577Z\"\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c1f30a8f-1960-4b5a-8fdd-efa0a4c6b332",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"<string>\",\n  \"method\": \"<string>\",\n  \"amount\": \"<integer>\",\n  \"pix\": {\n    \"type\": \"<string>\",\n    \"key\": \"<string>\"\n  },\n  \"description\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f044005e-fbce-4b95-951d-70da9c022568",
+          "name": "Get a withdrawal",
+          "request": {
+            "name": "Get a withdrawal",
+            "description": {
+              "content": "Retrieves a withdrawal transaction by external ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "withdraw",
+                "get"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "externalId",
+                  "value": "<string>",
+                  "description": "(Required) The external identifier supplied when the withdrawal was created."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d63722c7-7665-4876-b062-930bdf259464",
+              "name": "Withdrawal found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "externalId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"externalId\": \"string\",\n    \"status\": \"COMPLETED\",\n    \"kind\": \"string\",\n    \"amount\": 6318,\n    \"createdAt\": \"2025-07-05T15:22:52.577Z\"\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "025967cb-337d-4131-afc9-220b6ff055e0",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "externalId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a0523ba6-d702-433c-817a-6c80c79016df",
+              "name": "Withdrawal not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "externalId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3d3a7cec-a1e8-4bbe-8454-facfad3ff509",
+          "name": "List withdrawals",
+          "request": {
+            "name": "List withdrawals",
+            "description": {
+              "content": "Returns the list of withdrawal transactions for the authenticated store.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "withdraw",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "db77222a-3325-4ad4-a254-91f493db8259",
+              "name": "A list of withdrawals",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"externalId\": \"string\",\n      \"status\": \"PENDING\",\n      \"kind\": \"string\",\n      \"amount\": 6567,\n      \"createdAt\": \"2002-03-20T23:41:23.407Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"externalId\": \"string\",\n      \"status\": \"COMPLETED\",\n      \"kind\": \"string\",\n      \"amount\": 3106,\n      \"createdAt\": \"2019-01-01T14:38:48.227Z\"\n    }\n  ],\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49119ff7-e413-497e-ae15-dd84149da973",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "withdraw",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.abacatepay.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c0e8dbdf-379d-426c-aaae-1a2a051d9c7c",
+    "name": "AbacatePay Billing Withdraw API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.\n\nContact Support:\n Name: AbacatePay Support",
+      "type": "text/plain"
+    }
+  }
+}

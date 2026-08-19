@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AbacatePay Billing Coupon API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coupon",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new coupon",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.abacatepay.com/v1/coupon/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a discount coupon with a percentage or fixed-amount discount."
+        },
+        {
+          "info": {
+            "name": "List coupons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.abacatepay.com/v1/coupon/list"
+          },
+          "docs": "Returns the list of coupons for the authenticated store."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

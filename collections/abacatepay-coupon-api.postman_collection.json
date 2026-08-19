@@ -1,0 +1,318 @@
+{
+  "item": [
+    {
+      "id": "7fc26a90-ba43-43b5-990d-6ea8c1181c9e",
+      "name": "Coupon",
+      "description": {
+        "content": "Create and list discount coupons.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "acb92ab1-91fd-4e0b-b0ab-2fae3e45ca75",
+          "name": "Create a new coupon",
+          "request": {
+            "name": "Create a new coupon",
+            "description": {
+              "content": "Creates a discount coupon with a percentage or fixed-amount discount.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "coupon",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"<string>\",\n  \"discount\": \"<number>\",\n  \"discountKind\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"maxRedeems\": \"<integer>\",\n  \"metadata\": {\n    \"key_0\": 9754\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8fea281e-3934-4c33-8612-fae407706c06",
+              "name": "Coupon created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupon",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"<string>\",\n  \"discount\": \"<number>\",\n  \"discountKind\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"maxRedeems\": \"<integer>\",\n  \"metadata\": {\n    \"key_0\": false,\n    \"key_1\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"string\",\n    \"code\": \"string\",\n    \"discount\": 1286.5928024464356,\n    \"discountKind\": \"string\",\n    \"status\": \"DISABLED\",\n    \"maxRedeems\": 8401,\n    \"redeemsCount\": 8909,\n    \"notes\": \"string\",\n    \"metadata\": {\n      \"key_0\": false,\n      \"key_1\": 2228\n    }\n  },\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "947f9567-0dd3-4e4c-bacd-7c1969b1f33e",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupon",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"<string>\",\n  \"discount\": \"<number>\",\n  \"discountKind\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"maxRedeems\": \"<integer>\",\n  \"metadata\": {\n    \"key_0\": false,\n    \"key_1\": false\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6a9a7b0-059d-4035-88fe-adf9f4137808",
+          "name": "List coupons",
+          "request": {
+            "name": "List coupons",
+            "description": {
+              "content": "Returns the list of coupons for the authenticated store.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "coupon",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a9cd7302-0919-4d0d-8d5b-6cbb1d5c1869",
+              "name": "A list of coupons",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupon",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"code\": \"string\",\n      \"discount\": 9724.2475374275,\n      \"discountKind\": \"string\",\n      \"status\": \"ACTIVE\",\n      \"maxRedeems\": 3584,\n      \"redeemsCount\": 7889,\n      \"notes\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"code\": \"string\",\n      \"discount\": 7002.445980996516,\n      \"discountKind\": \"string\",\n      \"status\": \"ACTIVE\",\n      \"maxRedeems\": 1178,\n      \"redeemsCount\": 1028,\n      \"notes\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 2245.336942350472\n      }\n    }\n  ],\n  \"error\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1052438-5fde-4a54-ad80-25d0d523b94e",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupon",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.abacatepay.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3c32189e-e866-4bc4-bb7b-39d6ea27b369",
+    "name": "AbacatePay Billing Coupon API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.\n\nContact Support:\n Name: AbacatePay Support",
+      "type": "text/plain"
+    }
+  }
+}
