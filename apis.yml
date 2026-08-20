@@ -25,6 +25,12 @@ tags:
 - Payments
 - Pix
 - Brazil
+- Fintech
+- Developers
+tags_raw:
+- Payments
+- Pix
+- Brazil
 - FinTech
 - Developers
 created: '2026-06-21'
@@ -34,6 +40,10 @@ apis:
 - aid: abacatepay:abacatepay-webhooks-api
   name: AbacatePay Webhooks
   tags:
+  - Webhook
+  - Event
+  - Notification
+  tags_raw:
   - Webhooks
   - Events
   - Notifications
@@ -93,6 +103,8 @@ apis:
   humanURL: https://docs.abacatepay.com/pages/v1/introduction
   baseURL: https://api.abacatepay.com/v1
   tags:
+  - Customers
+  tags_raw:
   - Customer
   properties:
   - type: OpenAPI
