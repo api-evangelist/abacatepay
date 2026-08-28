@@ -7,6 +7,18 @@ description: AbacatePay is a Brazilian payment gateway built for developers and 
   and charges, generate and check Pix QR Codes, manage customers and coupons, request
   withdrawals, and receive webhooks - charging a flat per-transaction Pix fee with
   funds available immediately.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
