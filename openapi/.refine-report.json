@@ -1,11 +1,7 @@
 {
   "provider": "abacatepay",
   "sources": [
-    "abacatepay-billing-api-openapi.yml",
-    "abacatepay-coupon-api-openapi.yml",
-    "abacatepay-customer-api-openapi.yml",
-    "abacatepay-pix-qr-code-api-openapi.yml",
-    "abacatepay-withdraw-api-openapi.yml"
+    "_original/abacatepay-openapi.yml"
   ],
   "outputs": [
     "abacatepay-billing-api-openapi.yml",
@@ -17,6 +13,16 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "abacatepay-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "abacatepay-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "abacatepay-coupon-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "abacatepay-customer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "abacatepay-pix-qr-code-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "abacatepay-withdraw-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

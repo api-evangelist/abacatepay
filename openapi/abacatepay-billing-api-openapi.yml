@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: AbacatePay Billing API
   description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
@@ -57,12 +57,101 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Billing'
-                  error:
-                    nullable: true
+                  error: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Billing:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+          description: Shareable checkout URL.
+        amount:
+          type: integer
+          description: Total amount in cents.
+        status:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+        frequency:
+          type: string
+        methods:
+          type: array
+          items:
+            type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+    Product:
+      type: object
+      required:
+      - externalId
+      - name
+      - quantity
+      - price
+      properties:
+        externalId:
+          type: string
+          description: Your identifier for the product.
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        price:
+          type: integer
+          description: Unit price in cents (BRL centavos).
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
+    BillingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Billing'
+        error: {}
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
     CreateBillingRequest:
       type: object
       required:
@@ -112,98 +201,6 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
-    Product:
-      type: object
-      required:
-      - externalId
-      - name
-      - quantity
-      - price
-      properties:
-        externalId:
-          type: string
-          description: Your identifier for the product.
-        name:
-          type: string
-        description:
-          type: string
-        quantity:
-          type: integer
-          minimum: 1
-        price:
-          type: integer
-          description: Unit price in cents (BRL centavos).
-    Error:
-      type: object
-      properties:
-        data:
-          nullable: true
-        error:
-          type: string
-          description: Human-readable error message.
-    BillingResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Billing'
-        error:
-          nullable: true
-    CustomerData:
-      type: object
-      properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
-    Billing:
-      type: object
-      properties:
-        id:
-          type: string
-        url:
-          type: string
-          format: uri
-          description: Shareable checkout URL.
-        amount:
-          type: integer
-          description: Total amount in cents.
-        status:
-          type: string
-          enum:
-          - PENDING
-          - EXPIRED
-          - CANCELLED
-          - PAID
-          - REFUNDED
-        frequency:
-          type: string
-        methods:
-          type: array
-          items:
-            type: string
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: AbacatePay Billing Pix QR Code API
+  title: AbacatePay Pix QR Code API
   description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
   termsOfService: https://www.abacatepay.com/termos
   contact:
@@ -68,8 +68,7 @@ paths:
                       expiresAt:
                         type: string
                         format: date-time
-                  error:
-                    nullable: true
+                  error: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
   /pixQrCode/simulate-payment:
@@ -107,13 +106,31 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    PixQrCodeResponse:
+    PixStatus:
+      type: string
+      enum:
+      - PENDING
+      - PAID
+      - EXPIRED
+      - CANCELLED
+      - REFUNDED
+    CreatePixQrCodeRequest:
       type: object
+      required:
+      - amount
       properties:
-        data:
-          $ref: '#/components/schemas/PixQrCode'
-        error:
-          nullable: true
+        amount:
+          type: integer
+          description: Amount to charge in cents (BRL centavos).
+        expiresIn:
+          type: integer
+          description: Seconds until the QR Code expires.
+        description:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CustomerData'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     PixQrCode:
       type: object
       properties:
@@ -134,14 +151,6 @@ components:
           format: date-time
         metadata:
           $ref: '#/components/schemas/Metadata'
-    Error:
-      type: object
-      properties:
-        data:
-          nullable: true
-        error:
-          type: string
-          description: Human-readable error message.
     CustomerData:
       type: object
       properties:
@@ -155,35 +164,23 @@ components:
         taxId:
           type: string
           description: Brazilian tax identifier (CPF or CNPJ).
-    PixStatus:
-      type: string
-      enum:
-      - PENDING
-      - PAID
-      - EXPIRED
-      - CANCELLED
-      - REFUNDED
+    PixQrCodeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PixQrCode'
+        error: {}
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
     Metadata:
       type: object
       description: Arbitrary key/value metadata attached to a resource.
       additionalProperties: true
-    CreatePixQrCodeRequest:
-      type: object
-      required:
-      - amount
-      properties:
-        amount:
-          type: integer
-          description: Amount to charge in cents (BRL centavos).
-        expiresIn:
-          type: integer
-          description: Seconds until the QR Code expires.
-        description:
-          type: string
-        customer:
-          $ref: '#/components/schemas/CustomerData'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
   responses:
     Unauthorized:
       description: Missing or invalid API key

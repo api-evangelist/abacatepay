@@ -1,0 +1,18 @@
+generated: '2026-09-19'
+method: probed
+hosts:
+- host: https://mcp.abacatepay.com
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: abacatepay-mcp-oauth-protected-resource.json
+    bytes: 237
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: abacatepay-mcp-oauth-authorization-server.json
+    bytes: 478
+  path_echo_control: passed
+note: 'MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s
+  primary hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed
+  and were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'

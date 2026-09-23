@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: AbacatePay Billing Withdraw API
+  title: AbacatePay Withdraw API
   description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
   termsOfService: https://www.abacatepay.com/termos
   contact:
@@ -86,11 +86,17 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Transaction'
-                  error:
-                    nullable: true
+                  error: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Transaction:
       type: object
@@ -114,14 +120,32 @@ components:
         createdAt:
           type: string
           format: date-time
-    Error:
+    WithdrawResponse:
       type: object
       properties:
         data:
-          nullable: true
+          $ref: '#/components/schemas/Transaction'
+        error: {}
+    Error:
+      type: object
+      properties:
+        data: {}
         error:
           type: string
           description: Human-readable error message.
+    PixKey:
+      type: object
+      required:
+      - type
+      - key
+      properties:
+        type:
+          type: string
+          enum:
+          - PIX
+        key:
+          type: string
+          description: The destination Pix key (CPF, CNPJ, email, phone, or random key).
     CreateWithdrawRequest:
       type: object
       required:
@@ -144,33 +168,6 @@ components:
           $ref: '#/components/schemas/PixKey'
         description:
           type: string
-    WithdrawResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Transaction'
-        error:
-          nullable: true
-    PixKey:
-      type: object
-      required:
-      - type
-      - key
-      properties:
-        type:
-          type: string
-          enum:
-          - PIX
-        key:
-          type: string
-          description: The destination Pix key (CPF, CNPJ, email, phone, or random key).
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

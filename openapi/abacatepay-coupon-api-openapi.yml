@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: AbacatePay Billing Coupon API
+  title: AbacatePay Coupon API
   description: REST API for AbacatePay, a Brazilian payment gateway focused on instant Pix payments. Create billings and charges, generate and check Pix QR Codes, manage customers and coupons, and request withdrawals. All responses follow the {data, error} envelope and authenticate with a Bearer API key.
   termsOfService: https://www.abacatepay.com/termos
   contact:
@@ -57,20 +57,24 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Coupon'
-                  error:
-                    nullable: true
+                  error: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
+    CouponResponse:
       type: object
       properties:
         data:
-          nullable: true
-        error:
-          type: string
-          description: Human-readable error message.
+          $ref: '#/components/schemas/Coupon'
+        error: {}
     CreateCouponRequest:
       type: object
       required:
@@ -96,13 +100,6 @@ components:
           description: Maximum number of redemptions; -1 for unlimited.
         metadata:
           $ref: '#/components/schemas/Metadata'
-    CouponResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Coupon'
-        error:
-          nullable: true
     Coupon:
       type: object
       properties:
@@ -127,17 +124,17 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
     Metadata:
       type: object
       description: Arbitrary key/value metadata attached to a resource.
       additionalProperties: true
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
