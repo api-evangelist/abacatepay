@@ -114,6 +114,23 @@ components:
       - EXPIRED
       - CANCELLED
       - REFUNDED
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
     CreatePixQrCodeRequest:
       type: object
       required:
@@ -131,6 +148,13 @@ components:
           $ref: '#/components/schemas/CustomerData'
         metadata:
           $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
     PixQrCode:
       type: object
       properties:
@@ -151,36 +175,12 @@ components:
           format: date-time
         metadata:
           $ref: '#/components/schemas/Metadata'
-    CustomerData:
-      type: object
-      properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
     PixQrCodeResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/PixQrCode'
         error: {}
-    Error:
-      type: object
-      properties:
-        data: {}
-        error:
-          type: string
-          description: Human-readable error message.
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
   responses:
     Unauthorized:
       description: Missing or invalid API key

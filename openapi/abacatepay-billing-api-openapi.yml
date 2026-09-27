@@ -61,14 +61,30 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+    BillingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Billing'
+        error: {}
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
     Billing:
       type: object
       properties:
@@ -101,40 +117,6 @@ components:
             $ref: '#/components/schemas/Product'
         metadata:
           $ref: '#/components/schemas/Metadata'
-    CustomerData:
-      type: object
-      properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
-    Product:
-      type: object
-      required:
-      - externalId
-      - name
-      - quantity
-      - price
-      properties:
-        externalId:
-          type: string
-          description: Your identifier for the product.
-        name:
-          type: string
-        description:
-          type: string
-        quantity:
-          type: integer
-          minimum: 1
-        price:
-          type: integer
-          description: Unit price in cents (BRL centavos).
     Error:
       type: object
       properties:
@@ -142,16 +124,6 @@ components:
         error:
           type: string
           description: Human-readable error message.
-    BillingResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Billing'
-        error: {}
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
     CreateBillingRequest:
       type: object
       required:
@@ -201,6 +173,34 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
+    Product:
+      type: object
+      required:
+      - externalId
+      - name
+      - quantity
+      - price
+      properties:
+        externalId:
+          type: string
+          description: Your identifier for the product.
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        price:
+          type: integer
+          description: Unit price in cents (BRL centavos).
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
