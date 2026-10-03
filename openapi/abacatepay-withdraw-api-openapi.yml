@@ -91,12 +91,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    WithdrawResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Transaction'
-        error: {}
     Transaction:
       type: object
       properties:
@@ -119,13 +113,6 @@ components:
         createdAt:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        data: {}
-        error:
-          type: string
-          description: Human-readable error message.
     CreateWithdrawRequest:
       type: object
       required:
@@ -161,6 +148,19 @@ components:
         key:
           type: string
           description: The destination Pix key (CPF, CNPJ, email, phone, or random key).
+    WithdrawResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Transaction'
+        error: {}
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
   responses:
     Unauthorized:
       description: Missing or invalid API key

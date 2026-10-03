@@ -106,18 +106,26 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    PixStatus:
-      type: string
-      enum:
-      - PENDING
-      - PAID
-      - EXPIRED
-      - CANCELLED
-      - REFUNDED
-    Metadata:
+    PixQrCode:
       type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
+      properties:
+        id:
+          type: string
+        amount:
+          type: integer
+        status:
+          $ref: '#/components/schemas/PixStatus'
+        brCode:
+          type: string
+          description: Pix copy-and-paste payload (BR Code).
+        brCodeBase64:
+          type: string
+          description: Base64-encoded QR Code image.
+        expiresAt:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     CustomerData:
       type: object
       properties:
@@ -131,6 +139,14 @@ components:
         taxId:
           type: string
           description: Brazilian tax identifier (CPF or CNPJ).
+    PixStatus:
+      type: string
+      enum:
+      - PENDING
+      - PAID
+      - EXPIRED
+      - CANCELLED
+      - REFUNDED
     CreatePixQrCodeRequest:
       type: object
       required:
@@ -155,26 +171,10 @@ components:
         error:
           type: string
           description: Human-readable error message.
-    PixQrCode:
+    Metadata:
       type: object
-      properties:
-        id:
-          type: string
-        amount:
-          type: integer
-        status:
-          $ref: '#/components/schemas/PixStatus'
-        brCode:
-          type: string
-          description: Pix copy-and-paste payload (BR Code).
-        brCodeBase64:
-          type: string
-          description: Base64-encoded QR Code image.
-        expiresAt:
-          type: string
-          format: date-time
-        metadata:
-          $ref: '#/components/schemas/Metadata'
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
     PixQrCodeResponse:
       type: object
       properties:

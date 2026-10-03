@@ -62,23 +62,12 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
     CouponResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/Coupon'
         error: {}
-    Error:
-      type: object
-      properties:
-        data: {}
-        error:
-          type: string
-          description: Human-readable error message.
     CreateCouponRequest:
       type: object
       required:
@@ -128,6 +117,17 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
   responses:
     Unauthorized:
       description: Missing or invalid API key

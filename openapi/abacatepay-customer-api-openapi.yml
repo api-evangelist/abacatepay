@@ -62,12 +62,26 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    CustomerResponse:
+    CustomerData:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/Customer'
-        error: {}
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/CustomerData'
     CreateCustomerRequest:
       type: object
       required:
@@ -86,19 +100,12 @@ components:
         taxId:
           type: string
           description: Brazilian tax identifier (CPF or CNPJ).
-    CustomerData:
+    CustomerResponse:
       type: object
       properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
+        data:
+          $ref: '#/components/schemas/Customer'
+        error: {}
     Error:
       type: object
       properties:
@@ -106,13 +113,6 @@ components:
         error:
           type: string
           description: Human-readable error message.
-    Customer:
-      type: object
-      properties:
-        id:
-          type: string
-        metadata:
-          $ref: '#/components/schemas/CustomerData'
   responses:
     Unauthorized:
       description: Missing or invalid API key
