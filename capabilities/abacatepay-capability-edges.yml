@@ -1,0 +1,53 @@
+slug: abacatepay
+provider: AbacatePay
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 4
+edges:
+- tag: Customer
+  spec_file: abacatepay-customer-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.75
+  evidence: POST /customer/create "Create a new customer"; GET /customer/list; schemas CustomerData, Customer,
+    CustomerResponse
+  reason: Maintains customer records (payer master data) in the gateway — customer data management. Thin
+    but unambiguous as a customer master CRUD surface.
+- tag: Pix QR Code
+  spec_file: abacatepay-pix-qr-code-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.75
+  evidence: POST /pixQrCode/create "Create a Pix QR Code"; GET /pixQrCode/check "Check Pix QR Code status";
+    POST /pixQrCode/simulate-payment
+  reason: Generates and checks Pix payment instruments and simulates payment — payment authorisation/collection
+    mechanics. No closer payment-processing capability exists in this frame.
+- tag: Billing
+  spec_file: abacatepay-billing-api-openapi.yml
+  capability_id: BC-4250.30
+  capability_id_l1: BC-4250
+  capability_name: Invoicing & Statement Management
+  confidence: 0.7
+  evidence: POST /billing/create "Create a new billing"; GET /billing/list; schemas Billing, Product,
+    CreateBillingRequest
+  reason: Creates and lists billings (charge documents) for a payment gateway — invoicing/statement generation
+    for collection. Mapped at L2 invoicing with moderate confidence since it also borders payment collection.
+- tag: Coupon
+  spec_file: abacatepay-coupon-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.7
+  evidence: POST /coupon/create "Create a new coupon"; GET /coupon/list "List coupons"; schema "Coupon"
+  reason: Coupon creation and listing is discount/promotion instrument management applied to charges.

@@ -177,6 +177,9 @@ apis:
   - type: Documentation
     url: https://docs.abacatepay.com/pages/reference/introduction
 common:
+- type: CapabilityMap
+  url: capabilities/abacatepay-capability-edges.yml
+  name: AbacatePay Business Capability Map
 - type: AgenticAccess
   url: agentic-access/abacatepay-agentic-access.yml
 - type: DomainSecurity
