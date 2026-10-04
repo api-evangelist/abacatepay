@@ -90,7 +90,20 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    WithdrawResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Transaction'
+        error: {}
     Transaction:
       type: object
       properties:
@@ -148,12 +161,6 @@ components:
         key:
           type: string
           description: The destination Pix key (CPF, CNPJ, email, phone, or random key).
-    WithdrawResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Transaction'
-        error: {}
     Error:
       type: object
       properties:
@@ -161,13 +168,6 @@ components:
         error:
           type: string
           description: Human-readable error message.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

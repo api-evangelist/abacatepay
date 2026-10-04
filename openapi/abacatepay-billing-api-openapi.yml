@@ -62,38 +62,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Billing:
-      type: object
-      properties:
-        id:
-          type: string
-        url:
-          type: string
-          format: uri
-          description: Shareable checkout URL.
-        amount:
-          type: integer
-          description: Total amount in cents.
-        status:
-          type: string
-          enum:
-          - PENDING
-          - EXPIRED
-          - CANCELLED
-          - PAID
-          - REFUNDED
-        frequency:
-          type: string
-        methods:
-          type: array
-          items:
-            type: string
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
     Product:
       type: object
       required:
@@ -115,29 +83,6 @@ components:
         price:
           type: integer
           description: Unit price in cents (BRL centavos).
-    BillingResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Billing'
-        error: {}
-    CustomerData:
-      type: object
-      properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
     CreateBillingRequest:
       type: object
       required:
@@ -187,6 +132,57 @@ components:
           type: string
         metadata:
           $ref: '#/components/schemas/Metadata'
+    BillingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Billing'
+        error: {}
+    CustomerData:
+      type: object
+      properties:
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+    Billing:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+          description: Shareable checkout URL.
+        amount:
+          type: integer
+          description: Total amount in cents.
+        status:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+        frequency:
+          type: string
+        methods:
+          type: array
+          items:
+            type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     Error:
       type: object
       properties:
@@ -194,6 +190,10 @@ components:
         error:
           type: string
           description: Human-readable error message.
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
   responses:
     Unauthorized:
       description: Missing or invalid API key
