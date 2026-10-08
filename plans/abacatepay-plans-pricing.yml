@@ -130,3 +130,29 @@ plans:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units:
+  - request
+  - transaction
+  plans:
+  - name: Pay Per Transaction
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - request
+    - transaction
+    periods:
+    - month
+  - name: Withdrawals
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - transaction
+    periods:
+    - month
