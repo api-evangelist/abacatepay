@@ -69,6 +69,47 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        discount:
+          type: number
+        discountKind:
+          type: string
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - DISABLED
+        maxRedeems:
+          type: integer
+        redeemsCount:
+          type: integer
+        notes:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
+    CouponResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Coupon'
+        error: {}
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
     CreateCouponRequest:
       type: object
       required:
@@ -94,47 +135,6 @@ components:
           description: Maximum number of redemptions; -1 for unlimited.
         metadata:
           $ref: '#/components/schemas/Metadata'
-    Error:
-      type: object
-      properties:
-        data: {}
-        error:
-          type: string
-          description: Human-readable error message.
-    CouponResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Coupon'
-        error: {}
-    Coupon:
-      type: object
-      properties:
-        id:
-          type: string
-        code:
-          type: string
-        discount:
-          type: number
-        discountKind:
-          type: string
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - DISABLED
-        maxRedeems:
-          type: integer
-        redeemsCount:
-          type: integer
-        notes:
-          type: string
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
   securitySchemes:
     bearerAuth:
       type: http

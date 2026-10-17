@@ -105,51 +105,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    CustomerData:
-      type: object
-      properties:
-        name:
-          type: string
-        cellphone:
-          type: string
-        email:
-          type: string
-          format: email
-        taxId:
-          type: string
-          description: Brazilian tax identifier (CPF or CNPJ).
-    CreatePixQrCodeRequest:
-      type: object
-      required:
-      - amount
-      properties:
-        amount:
-          type: integer
-          description: Amount to charge in cents (BRL centavos).
-        expiresIn:
-          type: integer
-          description: Seconds until the QR Code expires.
-        description:
-          type: string
-        customer:
-          $ref: '#/components/schemas/CustomerData'
-        metadata:
-          $ref: '#/components/schemas/Metadata'
-    Error:
-      type: object
-      properties:
-        data: {}
-        error:
-          type: string
-          description: Human-readable error message.
     PixQrCode:
       type: object
       properties:
@@ -170,6 +126,40 @@ components:
           format: date-time
         metadata:
           $ref: '#/components/schemas/Metadata'
+    PixQrCodeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PixQrCode'
+        error: {}
+    Error:
+      type: object
+      properties:
+        data: {}
+        error:
+          type: string
+          description: Human-readable error message.
+    Metadata:
+      type: object
+      description: Arbitrary key/value metadata attached to a resource.
+      additionalProperties: true
+    CreatePixQrCodeRequest:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: integer
+          description: Amount to charge in cents (BRL centavos).
+        expiresIn:
+          type: integer
+          description: Seconds until the QR Code expires.
+        description:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CustomerData'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
     PixStatus:
       type: string
       enum:
@@ -178,16 +168,26 @@ components:
       - EXPIRED
       - CANCELLED
       - REFUNDED
-    Metadata:
-      type: object
-      description: Arbitrary key/value metadata attached to a resource.
-      additionalProperties: true
-    PixQrCodeResponse:
+    CustomerData:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/PixQrCode'
-        error: {}
+        name:
+          type: string
+        cellphone:
+          type: string
+        email:
+          type: string
+          format: email
+        taxId:
+          type: string
+          description: Brazilian tax identifier (CPF or CNPJ).
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
