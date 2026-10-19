@@ -1,0 +1,884 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Transparents API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Transparents
+paths:
+  /transparents/create:
+    post:
+      summary: Criar Checkout Transparente
+      description: 'Cria um checkout transparente. Use `"method": "PIX"` para gerar um QR Code, `"method": "BOLETO"` para emitir um boleto com PIX alternativo incluído ou `"method": "CARD"` para cobrar cartão de crédito com o token gerado pelo abacatepay.js (`token`) ou com um cartão salvo (`cardToken`).'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method:
+                  type: string
+                  description: Método de pagamento.
+                  enum:
+                  - PIX
+                  - BOLETO
+                  - CARD
+                  default: PIX
+                  example: PIX
+                data:
+                  type: object
+                  description: Dados da cobrança.
+                  properties:
+                    amount:
+                      type: number
+                      description: Valor da cobrança em centavos. Mínimo `100` (R$ 1,00).
+                    expiresIn:
+                      type: number
+                      description: 'PIX — tempo de expiração em segundos. Não se aplica a `method: "BOLETO"` (use `dueDate`).
+
+                        '
+                      x-mint:
+                        hidden: true
+                    dueDate:
+                      type: string
+                      format: date
+                      description: 'BOLETO — data de vencimento no formato `YYYY-MM-DD` (ex: `"2026-08-15"`). Opcional. Se omitido, o vencimento padrão é de 3 dias úteis. Não pode ser data no passado. Máximo de 365 dias no futuro. Ignorado quando `method` é `PIX`.
+
+                        '
+                      example: '2026-08-15'
+                      x-mint:
+                        hidden: true
+                    description:
+                      type: string
+                      maxLength: 500
+                      description: Descrição da cobrança.
+                      x-mint:
+                        hidden: true
+                    customer:
+                      type: object
+                      description: 'Dados do pagador. Obrigatório para BOLETO (`name` e `taxId` sempre exigidos). Para PIX, se informado, todos os campos são obrigatórios. Para CARD, obrigatório com `name`, `email`, `taxId` (CPF ou CNPJ válido) e `cellphone`.
+
+                        '
+                      required:
+                      - name
+                      - taxId
+                      additionalProperties: false
+                      x-mint:
+                        hidden: true
+                      properties:
+                        name:
+                          type: string
+                          example: Daniel Lima
+                        taxId:
+                          type: string
+                          example: 111.444.777-35
+                        email:
+                          type: string
+                          example: daniel_lima@abacatepay.com
+                        cellphone:
+                          type: string
+                          example: (11) 4002-8922
+                    ensureSameTaxId:
+                      type: boolean
+                      default: false
+                      description: 'PIX — quando `true`, o pagamento só é aceito se o CPF/CNPJ do pagador for igual ao `customer.taxId` informado. Exige `customer.taxId`. Ignorado quando `method` é `BOLETO`.
+
+                        '
+                      example: false
+                      x-mint:
+                        hidden: true
+                    externalId:
+                      type: string
+                      description: ID no seu sistema para idempotência.
+                      x-mint:
+                        hidden: true
+                    interest:
+                      description: BOLETO — juros por atraso. Ignorado quando `method` é `PIX`.
+                      allOf:
+                      - $ref: '#/components/schemas/BoletoInterest'
+                      x-mint:
+                        hidden: true
+                    fine:
+                      description: BOLETO — multa por atraso. Ignorado quando `method` é `PIX`.
+                      allOf:
+                      - $ref: '#/components/schemas/BoletoFine'
+                      x-mint:
+                        hidden: true
+                    token:
+                      type: string
+                      pattern: ^ctok_
+                      description: CARD — token `ctok_` gerado pelo `tokenize()` do abacatepay.js. Vale 60 segundos e uma cobrança, e o `amount` precisa ser igual ao usado no `AbacatePay.create`. Envie `token` ou `cardToken`, nunca os dois.
+                      example: ctok_9fK2mQ7xLp4vR8sT1wYz3nBc
+                      x-mint:
+                        hidden: true
+                    cardToken:
+                      type: string
+                      maxLength: 200
+                      description: CARD — token permanente do cartão, devolvido em uma cobrança anterior. Cobra o mesmo cartão sem o cliente presente e com qualquer `amount`. Envie `token` ou `cardToken`, nunca os dois.
+                      example: dev_card_4242
+                      x-mint:
+                        hidden: true
+                    installmentCount:
+                      type: integer
+                      minimum: 1
+                      maximum: 12
+                      default: 1
+                      description: CARD — número de parcelas (1 = à vista). Cada parcela precisa ter pelo menos R$ 10,00.
+                      x-mint:
+                        hidden: true
+                    metadata:
+                      type: object
+                      description: Campos livres devolvidos na resposta. Para CARD, todos os valores precisam ser texto.
+                      additionalProperties: true
+                      x-mint:
+                        hidden: true
+                    utm:
+                      description: Parâmetros opcionais de campanha (UTM). Objeto e campos internos opcionais; valores enviados podem ser vistos no dashboard.
+                      allOf:
+                      - $ref: '#/components/schemas/TransparentCreateUtm'
+                  required:
+                  - amount
+                  additionalProperties: false
+              required:
+              - method
+              - data
+              additionalProperties: false
+      responses:
+        '200':
+          description: Checkout transparente criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TransparentCharge'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  success:
+                    $ref: '#/components/schemas/Success'
+              example:
+                data:
+                  id: bole_k8pqr2mnvx
+                  amount: 5000
+                  status: PENDING
+                  devMode: false
+                  barCode: 23793.38128 60007.827263 37000.963779 4 10010000005000
+                  url: https://app.abacatepay.com/pay/bole_k8pqr2mnvx/boleto
+                  brCode: 00020126580014BR.GOV.BCB.PIX0136d2b4e5f6-7890-abcd-ef12-34567890abcd5204000053039865802BR5914Mariana Costa6009SAO PAULO62070503***6304F1C2
+                  brCodeBase64: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+                  platformFee: 250
+                  receiptUrl: null
+                  expiresAt: '2026-08-16T02:59:59.999Z'
+                  createdAt: '2026-07-27T14:22:10.381Z'
+                  updatedAt: '2026-07-27T14:22:10.381Z'
+                  metadata:
+                    faturaId: fatura-456
+                    plano: pro
+                error: null
+                success:
+                  message: Checkout transparente criado com sucesso
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Transparents
+      operationId: postTransparentsCreate
+      x-operation-id-source: derived
+  /transparents/get:
+    get:
+      summary: Buscar um Checkout Transparente
+      description: Retorna os dados de um Checkout Transparente específico usando o ID.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do Checkout Transparente
+        required: true
+        schema:
+          type: string
+          example: pix_char_z2rSk6042t1mCKgGgeBpJe1u
+      responses:
+        '200':
+          description: Checkout Transparente encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PixQRCode'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Transparents
+      operationId: getTransparentsGet
+      x-operation-id-source: derived
+  /transparents/check:
+    get:
+      summary: Checar Status
+      description: Checar status do pagamento do QRCode Pix.
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Status retornado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Identificador único do Checkout Transparente.
+                        example: pix_char_z2rSk6042t1mCKgGgeBpJe1u
+                      status:
+                        type: string
+                        description: Informação sobre o andamento do QRCode Pix.
+                        enum:
+                        - PENDING
+                        - EXPIRED
+                        - CANCELLED
+                        - PAID
+                        - UNDER_DISPUTE
+                        - REFUNDED
+                        - REDEEMED
+                        - APPROVED
+                        - FAILED
+                        example: PENDING
+                      expiresAt:
+                        type: string
+                        description: Data de expiração do QRCode Pix
+                        example: '2026-03-04T15:48:59.876Z'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do Checkout Transparente
+        required: true
+        schema:
+          type: string
+      tags:
+      - Transparents
+      operationId: getTransparentsCheck
+      x-operation-id-source: derived
+  /transparents/simulate-payment:
+    post:
+      summary: Simular Pagamento
+      description: Simula o pagamento de um QRCode Pix criado no modo de desenvolvimento.
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Pagamento ralizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PixQRCode'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do Checkout Transparente
+        required: true
+        schema:
+          type: string
+      tags:
+      - Transparents
+      operationId: postTransparentsSimulatePayment
+      x-operation-id-source: derived
+  /transparents/list:
+    get:
+      summary: Listar Checkouts Transparentes
+      description: 'Retorna todos os Checkouts Transparentes (QRCodes PIX) que você criou.
+
+
+        Você pode usar essa rota para listar todos os seus checkouts transparentes e visualizar seus status, valores e informações relacionadas.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/QueryAfter'
+      - $ref: '#/components/parameters/QueryBefore'
+      - $ref: '#/components/parameters/QueryLimit'
+      - $ref: '#/components/parameters/QueryStartDate'
+      - $ref: '#/components/parameters/QueryEndDate'
+      - name: id
+        in: query
+        description: Filtrar por identificador único do QRCode Pix
+        required: false
+        schema:
+          type: string
+          example: pix_char_123456
+      - name: status
+        in: query
+        description: Filtrar por status do QRCode Pix
+        required: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+      - name: externalId
+        in: query
+        description: Filtrar por identificador do Checkout Transparente no seu sistema
+        required: false
+        schema:
+          type: string
+      - name: method
+        in: query
+        description: Filtrar por método de pagamento
+        required: false
+        schema:
+          type: string
+          enum:
+          - PIX
+          - CARD
+          - PIX_QRCODE
+          - BOLETO
+      responses:
+        '200':
+          description: Checkouts transparentes listados com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Lista de Checkouts Transparentes (QRCodes PIX).
+                    items:
+                      $ref: '#/components/schemas/PixQRCode'
+                  success:
+                    $ref: '#/components/schemas/Success'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  pagination:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Transparents
+      operationId: getTransparentsList
+      x-operation-id-source: derived
+  /transparents/refund:
+    post:
+      summary: Reembolsar Checkout Transparente
+      description: Reembolsa integralmente um pagamento transparente (PIX ou Cartão). O valor reembolsado é igual ao valor original da transação — reembolsos parciais não são suportados.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequestTransparent'
+      responses:
+        '200':
+          description: Reembolso criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Reembolso recusado por regra de negócio.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundError'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Transparents
+      operationId: postTransparentsRefund
+      x-operation-id-source: derived
+components:
+  schemas:
+    TransparentCreateUtm:
+      type: object
+      description: 'Parâmetros UTM opcionais para campanha. Objeto inteiro e campos internos opcionais; podem ser consultados no dashboard.
+
+        '
+      additionalProperties: false
+      properties:
+        source:
+          type: string
+          description: 'Opcional — ex.: origem ou fonte da campanha.'
+        medium:
+          type: string
+          description: 'Opcional — ex.: meio ou canal.'
+        campaign:
+          type: string
+          description: Opcional — nome ou identificador da campanha.
+        term:
+          type: string
+          description: 'Opcional — ex.: palavras-chave de anúncio.'
+        content:
+          type: string
+          description: 'Opcional — ex.: variante criativa ou conteúdo.'
+    BoletoFine:
+      type: object
+      description: 'Multa por atraso aplicada uma única vez após o vencimento do boleto. One-time late fine applied after the due date. Aplica-se apenas a `method: "BOLETO"`; ignorado nos demais métodos.'
+      additionalProperties: false
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          minimum: 0
+          description: 'Quando `type = "PERCENTAGE"`: centésimos de percentual sobre o valor do boleto (`200` = 2%). Quando `type = "FIXED"`: valor fixo em centavos (`1000` = R$ 10,00). Quando `0` ou omitido, sem multa.
+
+            EN: With `type: "PERCENTAGE"`, value is in hundredths of a percent (`200` = 2%). With `type: "FIXED"`, value is in cents (`1000` = R$ 10.00). `0` or omitted disables the fine.'
+          example: 200
+        type:
+          type: string
+          description: 'Tipo da multa. `PERCENTAGE` aplica percentual sobre o valor do boleto; `FIXED` aplica um valor fixo em centavos.
+
+            EN: Fine type. `PERCENTAGE` applies a percent of the boleto amount; `FIXED` applies a fixed amount in cents.'
+          enum:
+          - PERCENTAGE
+          - FIXED
+          example: PERCENTAGE
+    RefundResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID da transação de reembolso criada.
+              example: tran_abc123xyz
+            status:
+              type: string
+              description: Status da transação de reembolso.
+              example: COMPLETE
+            amount:
+              type: number
+              description: Valor reembolsado, em centavos.
+              example: 10000
+            reason:
+              type: string
+              nullable: true
+              description: Motivo informado na requisição; `null` quando não enviado.
+              example: Pedido cancelado pelo cliente.
+            originalId:
+              type: string
+              description: O `id` enviado na requisição.
+              example: bill_abc123xyz
+            createdAt:
+              type: string
+              format: date-time
+              description: Data de criação do reembolso.
+              example: '2026-10-05T14:30:00.000Z'
+        error:
+          type: string
+          nullable: true
+          example: null
+        success:
+          $ref: '#/components/schemas/Success'
+    TransparentCharge:
+      type: object
+      description: Dados da cobrança retornados pelo checkout transparente. Para PIX e boleto, os campos `brCode` e `brCodeBase64` são sempre retornados (PIX direto ou PIX alternativo do boleto), e o boleto também retorna `barCode` e `url`. Para cartão (`card_...`), retornam `cardToken`, `brand`, `lastFour` e, no parcelado, os campos `installment*`.
+      properties:
+        id:
+          type: string
+          description: Identificador único da cobrança.
+          example: bole_k8pqr2mnvx
+        amount:
+          type: number
+          description: Valor a ser pago em centavos.
+          example: 25000
+        status:
+          type: string
+          description: Status atual da cobrança.
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - UNDER_DISPUTE
+          - REFUNDED
+          - REDEEMED
+          - APPROVED
+          - FAILED
+          example: PENDING
+        devMode:
+          type: boolean
+          description: Indica se a cobrança foi criada em ambiente sandbox.
+          example: false
+        brCode:
+          type: string
+          description: 'Código copia-e-cola do QR Code PIX. Para `method: "BOLETO"`, representa o PIX alternativo da mesma cobrança.'
+          example: 00020126580014BR.GOV.BCB.PIX0136d2b4e5f6-7890-abcd-ef12-34567890abcd5204000053039865802BR5913Daniel Lima6009SAO PAULO62070503***6304F1C2
+        brCodeBase64:
+          type: string
+          description: 'Imagem em Base64 do QR Code PIX. Para `method: "BOLETO"`, representa o PIX alternativo da mesma cobrança.'
+          example: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+        barCode:
+          type: string
+          description: Linha digitável do boleto para pagamento no app do banco. Retornado quando `method` é `"BOLETO"`.
+          example: 23793.38128 60007.827263 37000.963779 4 10010000025000
+        url:
+          type: string
+          description: URL para visualização e impressão do boleto. Retornado quando `method` é `"BOLETO"`.
+          example: https://app.abacatepay.com/pay/bole_k8pqr2mnvx/boleto
+        platformFee:
+          type: number
+          description: Taxa da plataforma em centavos.
+          example: 250
+        interest:
+          nullable: true
+          description: 'Juros por atraso configurados para o boleto. `null` para `method: "PIX"` ou quando não foi configurado.'
+          allOf:
+          - $ref: '#/components/schemas/BoletoInterest'
+        fine:
+          nullable: true
+          description: 'Multa por atraso configurada para o boleto. `null` para `method: "PIX"` ou quando não foi configurada.'
+          allOf:
+          - $ref: '#/components/schemas/BoletoFine'
+        receiptUrl:
+          type: string
+          nullable: true
+          description: URL do comprovante de pagamento. Preenchido após o pagamento ser confirmado; `null` enquanto a cobrança estiver pendente.
+          example: null
+        expiresAt:
+          type: string
+          description: Data de expiração da cobrança (ISO 8601). Para boleto, corresponde ao fim do dia de `dueDate` (ou do vencimento padrão de 3 dias úteis, se `dueDate` não foi informado). Para cartão, é o fim do dia da criação, em UTC.
+          example: '2024-11-07T03:00:00.000Z'
+        createdAt:
+          type: string
+          description: Data de criação.
+          example: '2024-11-04T14:22:10.381Z'
+        updatedAt:
+          type: string
+          description: Data da última atualização.
+          example: '2024-11-04T14:22:10.381Z'
+        cardToken:
+          type: string
+          nullable: true
+          description: Cartão — token permanente do cartão, para cobrar de novo com `data.cardToken`. Retornado quando `method` é `"CARD"`.
+          example: dev_card_4242
+        brand:
+          type: string
+          nullable: true
+          description: Cartão — bandeira. Retornado quando `method` é `"CARD"`.
+          example: VISA
+        lastFour:
+          type: string
+          nullable: true
+          description: Cartão — últimos 4 dígitos. Retornado quando `method` é `"CARD"`.
+          example: '4242'
+        installmentCount:
+          type: integer
+          description: Cartão parcelado — número de parcelas.
+          example: 3
+        installmentAmount:
+          type: integer
+          description: Cartão parcelado — valor da primeira parcela em centavos. `amount` continua sendo o total da venda.
+          example: 10000
+        installmentNumber:
+          type: integer
+          description: Cartão parcelado — número da parcela (sempre 1 na criação).
+          example: 1
+        installmentGroupId:
+          type: string
+          nullable: true
+          description: Cartão parcelado — ID do parcelamento.
+          example: cinst_Qe5tY7uI9oP1aS3dF5gH7jK9
+        metadata:
+          type: object
+          description: Campos livres enviados na requisição.
+          additionalProperties: true
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+    RefundRequestTransparent:
+      type: object
+      required:
+      - id
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: 'ID da cobrança transparente (`pix_char_`, `card_` ou `char_`). O `bill_` de checkouts e links é recusado nesta rota.
+
+            '
+          example: pix_char_abc123xyz
+        reason:
+          type: string
+          maxLength: 500
+          description: Motivo do reembolso. Aparece no histórico da transação.
+          example: Cliente pagou em duplicidade.
+    BoletoInterest:
+      type: object
+      description: 'Juros por atraso aplicados ao boleto após o vencimento. Late interest applied to the boleto after the due date. Aplica-se apenas a `method: "BOLETO"`; ignorado nos demais métodos.'
+      additionalProperties: false
+      required:
+      - value
+      properties:
+        value:
+          type: integer
+          minimum: 0
+          description: 'Percentual de juros ao mês em centésimos de percentual (`100` = 1% ao mês, `250` = 2,5% ao mês). Quando `0` ou omitido, sem juros. Calculado pro rata die após o vencimento.
+
+            EN: Monthly late-interest rate in hundredths of a percent (`100` = 1%/month). Accrues pro rata die after the due date; `0` or omitted disables interest.'
+          example: 100
+    PaginationCursor:
+      type: object
+      description: Informações de paginação baseada em cursor.
+      required:
+      - hasMore
+      - next
+      - before
+      additionalProperties: false
+      properties:
+        hasMore:
+          type: boolean
+          description: Indica se existe uma próxima página.
+        next:
+          type: string
+          nullable: true
+          description: Cursor da próxima página (usar em `after`). `null` na última página.
+        before:
+          type: string
+          nullable: true
+          description: Cursor da página anterior (usar em `before`). `null` na primeira página.
+    RefundError:
+      type: object
+      properties:
+        data:
+          nullable: true
+          example: null
+        error:
+          type: string
+          description: Código do erro de reembolso.
+          enum:
+          - LOCK_NOT_ACQUIRED
+          - TRANSACTION_NOT_FOUND
+          - TRANSACTION_NOT_REFUNDABLE
+          - TRANSACTION_UNDER_DISPUTE
+          - INVALID_METHOD
+          - INSUFFICIENT_FUNDS
+          - STORE_NOT_FOUND
+          - REFUND_REQUEST_FAILED
+          - REFUND_CONFIRMATION_FAILED
+          example: TRANSACTION_UNDER_DISPUTE
+        success:
+          type: boolean
+          example: false
+    PixQRCode:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador único do QRCode Pix.
+          example: pix_char_123456
+        amount:
+          type: number
+          description: Valor a ser pago.
+          example: 100
+        status:
+          type: string
+          description: Informação sobre o andamento do QRCode Pix.
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - UNDER_DISPUTE
+          - REFUNDED
+          - REDEEMED
+          - APPROVED
+          - FAILED
+          example: PENDING
+        devMode:
+          type: boolean
+          description: Ambiente no qual o QRCode Pix foi criado.
+          example: true
+        brCode:
+          type: string
+          description: Código copia-e-cola do QRCode Pix.
+          example: 00020101021226950014br.gov.bcb.pix
+        brCodeBase64:
+          type: string
+          description: Imagem em Base64 do QRCode Pix.
+          example: data:image/png;base64,iVBORw0KGgoAAA
+        platformFee:
+          type: number
+          description: Taxas da plataforma
+          example: 80
+        receiptUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL do comprovante de pagamento. Preenchido após o pagamento ser confirmado; `null` enquanto a cobrança estiver pendente.
+          example: null
+        createdAt:
+          type: string
+          description: Data de criação do QRCode Pix.
+          example: '2025-03-24T21:50:20.772Z'
+        updatedAt:
+          type: string
+          description: Data de atualização do QRCode Pix.
+          example: '2025-03-24T21:50:20.772Z'
+        expiresAt:
+          type: string
+          description: Data de expiração do QRCode Pix
+          example: '2025-03-25T21:50:20.772Z'
+        metadata:
+          type: object
+          description: Metadados opcionais da cobrança.
+          additionalProperties: true
+  parameters:
+    QueryStartDate:
+      name: startDate
+      in: query
+      description: 'Filtra registros criados a partir desta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (00:00 do dia inicial).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-01'
+    QueryEndDate:
+      name: endDate
+      in: query
+      description: 'Filtra registros criados até esta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (23:59:59.999 do dia final).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-31'
+    QueryLimit:
+      name: limit
+      in: query
+      description: Quantidade de itens por página (1-100).
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    QueryAfter:
+      name: after
+      in: query
+      description: Cursor para buscar itens após este ponto (use o `publicId` retornado em `pagination.next`).
+      required: false
+      schema:
+        type: string
+    QueryBefore:
+      name: before
+      in: query
+      description: Cursor para buscar itens antes deste ponto (use o `publicId` retornado em `pagination.before`).
+      required: false
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '

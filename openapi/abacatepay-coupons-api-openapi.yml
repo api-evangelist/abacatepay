@@ -1,0 +1,519 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Coupons API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Coupons
+paths:
+  /coupons/create:
+    post:
+      summary: Criar um cupom
+      description: 'Permite que você crie um novo cupom que pode ser usado por seus clientes para aplicar descontos.
+
+
+        **Alternativa**: Você também pode criar e gerenciar seus cupons pelo Dashboard da AbacatePay.'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+      responses:
+        '200':
+          description: Cupom criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CouponResponse'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Coupons
+      operationId: postCouponsCreate
+      x-operation-id-source: derived
+  /coupons/list:
+    get:
+      summary: Listar cupons
+      description: 'Retorna todos os cupons que você criou com suporte a paginação.
+
+
+        Você pode usar essa rota para visualizar todos os seus cupons, incluindo seus status (ativos, inativos ou expirados), descontos aplicados e quantas vezes foram utilizados.
+
+
+        **Alternativa**: Você também pode visualizar e gerenciar seus cupons pelo Dashboard da AbacatePay.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/QueryAfter'
+      - $ref: '#/components/parameters/QueryBefore'
+      - $ref: '#/components/parameters/QueryLimit'
+      - $ref: '#/components/parameters/QueryStartDate'
+      - $ref: '#/components/parameters/QueryEndDate'
+      - name: id
+        in: query
+        description: Filtrar por identificador único do cupom
+        required: false
+        schema:
+          type: string
+          example: DEYVIN_20
+      - name: status
+        in: query
+        description: Filtrar por status do cupom
+        required: false
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - EXPIRED
+      responses:
+        '200':
+          description: Lista de cupons retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Lista de cupons.
+                    items:
+                      $ref: '#/components/schemas/CouponResponse'
+                  success:
+                    $ref: '#/components/schemas/Success'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  pagination:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Coupons
+      operationId: getCouponsList
+      x-operation-id-source: derived
+  /coupons/get:
+    get:
+      summary: Buscar um cupom
+      description: 'Retorna os dados de um cupom específico baseado em filtros.
+
+
+        Você pode usar essa rota para buscar um cupom por ID ou outros critérios.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do cupom
+        required: true
+        schema:
+          type: string
+          example: MY_COUPON
+      - name: status
+        in: query
+        description: Filtrar por status do cupom
+        required: false
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - DISABLED
+          - DELETED
+      responses:
+        '200':
+          description: Cupom encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CouponResponse'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Cupom não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o cupom não foi encontrado.
+                    example: Cupom não encontrado.
+      tags:
+      - Coupons
+      operationId: getCouponsGet
+      x-operation-id-source: derived
+  /coupons/delete:
+    post:
+      summary: Deletar um cupom
+      description: 'Remove um cupom da sua loja.
+
+
+        Esta operação é irreversível. Use com cuidado.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Identificador único do cupom a ser deletado
+        schema:
+          type: string
+          example: MY_COUPON
+      responses:
+        '200':
+          description: Cupom deletado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CouponResponse'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Cupom não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o cupom não foi encontrado.
+                    example: Cupom não encontrado.
+      tags:
+      - Coupons
+      operationId: postCouponsDelete
+      x-operation-id-source: derived
+  /coupons/toggle:
+    post:
+      summary: Alternar status de um cupom
+      description: 'Alterna o status de um cupom entre ativo e inativo.
+
+
+        Use essa rota para ativar ou desativar um cupom sem precisar deletá-lo.
+
+
+        Diferente de `/coupons/delete`, o `id` vai no corpo da requisição, não na query.'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              additionalProperties: false
+              properties:
+                id:
+                  type: string
+                  description: Identificador único do cupom
+                  example: MY_COUPON
+      responses:
+        '200':
+          description: Status do cupom alternado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CouponResponse'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Cupom não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o cupom não foi encontrado.
+                    example: Cupom não encontrado.
+      tags:
+      - Coupons
+      operationId: postCouponsToggle
+      x-operation-id-source: derived
+components:
+  parameters:
+    QueryStartDate:
+      name: startDate
+      in: query
+      description: 'Filtra registros criados a partir desta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (00:00 do dia inicial).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-01'
+    QueryEndDate:
+      name: endDate
+      in: query
+      description: 'Filtra registros criados até esta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (23:59:59.999 do dia final).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-31'
+    QueryLimit:
+      name: limit
+      in: query
+      description: Quantidade de itens por página (1-100).
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    QueryAfter:
+      name: after
+      in: query
+      description: Cursor para buscar itens após este ponto (use o `publicId` retornado em `pagination.next`).
+      required: false
+      schema:
+        type: string
+    QueryBefore:
+      name: before
+      in: query
+      description: Cursor para buscar itens antes deste ponto (use o `publicId` retornado em `pagination.before`).
+      required: false
+      schema:
+        type: string
+  schemas:
+    CouponResponse:
+      type: object
+      description: Os dados do seu cupom.
+      required:
+      - id
+      - discount
+      - discountKind
+      - status
+      - createdAt
+      - updatedAt
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Identificador único do cupom
+          example: DEYVIN_20
+        notes:
+          type: string
+          description: Descrição sobre o cupom
+          example: Cupom de desconto pro meu público
+        maxRedeems:
+          type: integer
+          description: Quantidade de vezes em que o cupom pode ser resgatado. -1 significa ilimitado.
+          example: -1
+          default: 10
+        redeemsCount:
+          type: integer
+          description: Quantidade de vezes que o cupom já foi resgatado.
+          example: 0
+        discountKind:
+          type: string
+          description: Tipo de desconto aplicado, porcentagem ou fixo
+          enum:
+          - PERCENTAGE
+          - FIXED
+          example: PERCENTAGE
+        discount:
+          type: integer
+          description: Valor do desconto. Em `PERCENTAGE`, é em centésimos de ponto percentual (`1000` = 10%). Em `FIXED`, é em centavos.
+          example: 1000
+        devMode:
+          type: boolean
+          description: Indica se o cupom foi criado em ambiente de testes.
+          example: true
+        status:
+          type: string
+          description: Status atual do cupom.
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - EXPIRED
+          example: ACTIVE
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação do cupom.
+          example: '2025-05-25T23:43:25.250Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data de atualização do cupom.
+          example: '2025-05-25T23:43:25.250Z'
+        metadata:
+          type: object
+          description: Objeto chave valor para metadados do cupom
+          default: {}
+    Coupon:
+      type: object
+      description: Os dados do seu cupom.
+      required:
+      - code
+      - discount
+      - discountKind
+      - maxRedeems
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          description: Identificador único do cupom
+          example: DEYVIN_20
+        notes:
+          type: string
+          description: Descrição sbre o cupom
+          example: Cupom de desconto pro meu público
+        maxRedeems:
+          type: number
+          description: Quantidade de vezes em que o cupom pode ser resgatado. -1 Significa que esse cupom pode ser resgatado sem limites
+          example: 10
+          default: -1
+        discountKind:
+          type: string
+          description: Tipo de desconto aplicado, porcentagem ou fixo
+          enum:
+          - PERCENTAGE
+          - FIXED
+        discount:
+          type: integer
+          minimum: 0
+          description: 'Valor do desconto. Em `PERCENTAGE`, é em centésimos de ponto percentual: `100` = 1%, `1000` = 10% (máximo `10000` = 100%). Em `FIXED`, é em centavos (mínimo `100` = R$ 1,00).'
+          example: 1000
+        startsAt:
+          type: string
+          format: date-time
+          description: Início da validade do cupom. Se omitido, o cupom vale imediatamente. Precisa ser posterior a hoje.
+          example: '2026-09-01T00:00:00.000Z'
+        expiresAt:
+          type: string
+          format: date-time
+          description: Fim da validade do cupom. Se omitido, o cupom não expira. Precisa ser posterior a hoje e a `startsAt`.
+          example: '2026-12-31T23:59:59.000Z'
+    PaginationCursor:
+      type: object
+      description: Informações de paginação baseada em cursor.
+      required:
+      - hasMore
+      - next
+      - before
+      additionalProperties: false
+      properties:
+        hasMore:
+          type: boolean
+          description: Indica se existe uma próxima página.
+        next:
+          type: string
+          nullable: true
+          description: Cursor da próxima página (usar em `after`). `null` na última página.
+        before:
+          type: string
+          nullable: true
+          description: Cursor da página anterior (usar em `before`). `null` na primeira página.
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '

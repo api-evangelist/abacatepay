@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Customer Portal API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Customer Portal
+paths:
+  /customer-portal/create:
+    post:
+      summary: Criar um link do portal do cliente
+      description: 'Gera o link do portal do cliente para um cliente e um checkout que ele pagou. Chamar de novo com o mesmo `customerId` e `checkoutId` devolve o mesmo link.
+
+
+        O cliente entra no portal com um código de 6 dígitos enviado ao e-mail do cadastro e consegue ver os pagamentos, pedir reembolso, cancelar a assinatura e trocar o cartão.'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customerId
+              - checkoutId
+              additionalProperties: false
+              properties:
+                customerId:
+                  type: string
+                  description: ID do cliente que pagou o checkout
+                  example: cust_abc123xyz
+                checkoutId:
+                  type: string
+                  description: ID do checkout (avulso ou de assinatura)
+                  example: bill_abc123xyz
+      responses:
+        '200':
+          description: Link do portal criado (ou o existente).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID do link
+                        example: cpl_abc123xyz
+                      url:
+                        type: string
+                        description: Link para mandar ao cliente
+                        example: https://portal.abacatepay.com/k3J9xQ2mP7vL1nR8sT4wY6zA0bC5dE2f
+                      customerId:
+                        type: string
+                        example: cust_abc123xyz
+                      checkoutId:
+                        type: string
+                        example: bill_abc123xyz
+                      devMode:
+                        type: boolean
+                        example: false
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: '2026-10-19T12:00:00.000Z'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Customer Portal
+      operationId: postCustomerPortalCreate
+      x-operation-id-source: derived
+components:
+  schemas:
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '

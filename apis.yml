@@ -74,16 +74,16 @@ apis:
     Outbound webhook event notifications (billing.created, billing.paid, billing.refunded, billing.failed,
     subscription.created, subscription.canceled) delivered with a webhookSecret query string and HMAC-SHA256
     signature for verification.
-- aid: abacatepay:abacatepay-billing-api
-  name: AbacatePay Billing API
-  description: Create and list billings (charges) with a shareable checkout URL.
-  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+- aid: abacatepay:abacatepay-bank-statement-api
+  name: AbacatePay Bank Statement API
+  description: The Bank Statement API from AbacatePay — 1 operation(s) for bank statement.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
   baseURL: https://api.abacatepay.com/v1
   tags:
-  - Billing
+  - Bank Statement
   properties:
   - type: OpenAPI
-    url: openapi/abacatepay-billing-api-openapi.yml
+    url: openapi/abacatepay-bank-statement-api-openapi.yml
   - type: Documentation
     url: https://docs.abacatepay.com/pages/payment/create
   - type: APIReference
@@ -94,16 +94,16 @@ apis:
     url: https://docs.abacatepay.com/pages/client/create
   - type: Documentation
     url: https://docs.abacatepay.com/pages/reference/introduction
-- aid: abacatepay:abacatepay-coupon-api
-  name: AbacatePay Coupon API
-  description: Create and list discount coupons.
-  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+- aid: abacatepay:abacatepay-checkouts-api
+  name: AbacatePay Checkouts API
+  description: The Checkouts API from AbacatePay — 5 operation(s) for checkouts.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
   baseURL: https://api.abacatepay.com/v1
   tags:
-  - Coupon
+  - Checkouts
   properties:
   - type: OpenAPI
-    url: openapi/abacatepay-coupon-api-openapi.yml
+    url: openapi/abacatepay-checkouts-api-openapi.yml
   - type: Documentation
     url: https://docs.abacatepay.com/pages/payment/create
   - type: APIReference
@@ -114,18 +114,56 @@ apis:
     url: https://docs.abacatepay.com/pages/client/create
   - type: Documentation
     url: https://docs.abacatepay.com/pages/reference/introduction
-- aid: abacatepay:abacatepay-customer-api
-  name: AbacatePay Customer API
-  description: Create and list customers (clients).
-  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+- aid: abacatepay:abacatepay-coupons-api
+  name: AbacatePay Coupons API
+  description: The Coupons API from AbacatePay — 5 operation(s) for coupons.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Coupons
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-coupons-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-customer-portal-api
+  name: AbacatePay Customer Portal API
+  description: The Customer Portal API from AbacatePay — 1 operation(s) for customer portal.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Customer Portal
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-customer-portal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-customers-api
+  name: AbacatePay Customers API
+  description: The Customers API from AbacatePay — 4 operation(s) for customers.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
   baseURL: https://api.abacatepay.com/v1
   tags:
   - Customers
-  tags_raw:
-  - Customer
   properties:
   - type: OpenAPI
-    url: openapi/abacatepay-customer-api-openapi.yml
+    url: openapi/abacatepay-customers-api-openapi.yml
   - type: Documentation
     url: https://docs.abacatepay.com/pages/payment/create
   - type: APIReference
@@ -136,16 +174,16 @@ apis:
     url: https://docs.abacatepay.com/pages/client/create
   - type: Documentation
     url: https://docs.abacatepay.com/pages/reference/introduction
-- aid: abacatepay:abacatepay-pix-qr-code-api
-  name: AbacatePay Pix QR Code API
-  description: Create, check, and simulate dynamic Pix QR Code payments.
-  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+- aid: abacatepay:abacatepay-payment-links-api
+  name: AbacatePay Payment Links API
+  description: The Payment Links API from AbacatePay — 5 operation(s) for payment links.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
   baseURL: https://api.abacatepay.com/v1
   tags:
-  - Pix QR Code
+  - Payment Links
   properties:
   - type: OpenAPI
-    url: openapi/abacatepay-pix-qr-code-api-openapi.yml
+    url: openapi/abacatepay-payment-links-api-openapi.yml
   - type: Documentation
     url: https://docs.abacatepay.com/pages/payment/create
   - type: APIReference
@@ -156,16 +194,156 @@ apis:
     url: https://docs.abacatepay.com/pages/client/create
   - type: Documentation
     url: https://docs.abacatepay.com/pages/reference/introduction
-- aid: abacatepay:abacatepay-withdraw-api
-  name: AbacatePay Withdraw API
-  description: Create, retrieve, and list withdrawals (payouts) to a Pix key.
-  humanURL: https://docs.abacatepay.com/pages/v1/introduction
+- aid: abacatepay:abacatepay-payouts-api
+  name: AbacatePay Payouts API
+  description: The Payouts API from AbacatePay — 3 operation(s) for payouts.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
   baseURL: https://api.abacatepay.com/v1
   tags:
-  - Withdraw
+  - Payouts
   properties:
   - type: OpenAPI
-    url: openapi/abacatepay-withdraw-api-openapi.yml
+    url: openapi/abacatepay-payouts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-pix-api
+  name: AbacatePay Pix API
+  description: The Pix API from AbacatePay — 3 operation(s) for pix.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Pix
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-pix-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-products-api
+  name: AbacatePay Products API
+  description: The Products API from AbacatePay — 4 operation(s) for products.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-products-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-public-mrr-api
+  name: AbacatePay Public Mrr API
+  description: The Public Mrr API from AbacatePay — 4 operation(s) for public mrr.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Public Mrr
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-public-mrr-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-stores-api
+  name: AbacatePay Stores API
+  description: The Stores API from AbacatePay — 2 operation(s) for stores.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Stores
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-stores-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-subscriptions-api
+  name: AbacatePay Subscriptions API
+  description: The Subscriptions API from AbacatePay — 9 operation(s) for subscriptions.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-transparents-api
+  name: AbacatePay Transparents API
+  description: The Transparents API from AbacatePay — 6 operation(s) for transparents.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Transparents
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-transparents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/payment/create
+  - type: APIReference
+    url: https://docs.abacatepay.com/pages/reference/introduction
+  - type: PostmanCollection
+    url: collections/abacatepay.postman_collection.json
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/client/create
+  - type: Documentation
+    url: https://docs.abacatepay.com/pages/reference/introduction
+- aid: abacatepay:abacatepay-webhooks-api
+  name: AbacatePay Webhooks API
+  description: The Webhooks API from AbacatePay — 4 operation(s) for webhooks.
+  humanURL: https://docs.abacatepay.com/pages/v1/webhooks
+  baseURL: https://api.abacatepay.com/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/abacatepay-webhooks-api-openapi.yml
   - type: Documentation
     url: https://docs.abacatepay.com/pages/payment/create
   - type: APIReference

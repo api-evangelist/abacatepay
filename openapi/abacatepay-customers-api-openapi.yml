@@ -1,0 +1,470 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Customers API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Customers
+paths:
+  /customers/create:
+    post:
+      summary: Criar um cliente
+      description: 'Permite que você crie um cliente para a sua loja.
+
+
+        **Campo obrigatório**: Apenas o `email` é obrigatório para criar um cliente.
+
+
+        **Recomendado**: Embora os demais campos sejam opcionais, é altamente recomendado fornecer `name`, `cellphone`, `taxId` e `zipCode` quando disponíveis, pois essas informações melhoram a experiência do cliente no checkout e facilitam a identificação.'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: 'Os dados do seu cliente.
+
+
+                **Obrigatório**: Apenas `email` é obrigatório.
+
+
+                **Opcional mas recomendado**: `name`, `cellphone`, `taxId`, `zipCode` e `metadata` são opcionais, mas recomendados para melhor experiência do cliente.
+
+                '
+              required:
+              - email
+              additionalProperties: false
+              example:
+                email: daniel_lima@abacatepay.com
+              properties:
+                email:
+                  type: string
+                  description: E-mail do cliente (obrigatório)
+                  example: daniel_lima@abacatepay.com
+                name:
+                  type: string
+                  description: Nome completo do seu cliente (opcional)
+                  example: Daniel Lima
+                  x-mint:
+                    hidden: true
+                cellphone:
+                  type: string
+                  description: Celular do cliente (opcional)
+                  example: (11) 4002-8922
+                  x-mint:
+                    hidden: true
+                taxId:
+                  type: string
+                  description: CPF ou CNPJ válido do cliente (opcional)
+                  example: 111.444.777-35
+                  x-mint:
+                    hidden: true
+                zipCode:
+                  type: string
+                  description: CEP do cliente (opcional)
+                  example: 01310-100
+                  x-mint:
+                    hidden: true
+                metadata:
+                  type: object
+                  description: Metadados adicionais do cliente. Campo livre para a sua aplicação (opcional)
+                  additionalProperties: true
+                  example:
+                    source: landing-page
+                    campaign: black-friday-2025
+                  x-mint:
+                    hidden: true
+      responses:
+        '200':
+          description: Cliente criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Customers
+      operationId: postCustomersCreate
+      x-operation-id-source: derived
+  /customers/list:
+    get:
+      summary: Listar clientes
+      description: 'Retorna todos os clientes que você cadastrou com suporte a paginação.
+
+
+        Você pode usar essa rota para visualizar todos os seus clientes e suas informações.
+
+
+        **Alternativa**: Você também pode visualizar e gerenciar seus clientes pelo Dashboard da AbacatePay.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/QueryAfter'
+      - $ref: '#/components/parameters/QueryBefore'
+      - $ref: '#/components/parameters/QueryLimit'
+      - $ref: '#/components/parameters/QueryStartDate'
+      - $ref: '#/components/parameters/QueryEndDate'
+      - name: id
+        in: query
+        description: Filtrar por identificador único do cliente
+        required: false
+        schema:
+          type: string
+          example: cust_aebxkhDZNaMmJeKsy0AHS0FQ
+      - name: email
+        in: query
+        description: Filtrar por e-mail do cliente
+        required: false
+        schema:
+          type: string
+          example: daniel_lima@abacatepay.com
+      - name: taxId
+        in: query
+        description: Filtrar por CPF ou CNPJ do cliente
+        required: false
+        schema:
+          type: string
+          example: '11144477735'
+      - name: name
+        in: query
+        description: Filtrar por nome do cliente
+        required: false
+        schema:
+          type: string
+          example: Daniel Lima
+      - name: cellphone
+        in: query
+        description: Filtrar por telefone do cliente
+        required: false
+        schema:
+          type: string
+          example: (11) 4002-8922
+      responses:
+        '200':
+          description: Lista de clientes retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Lista de clientes.
+                    items:
+                      $ref: '#/components/schemas/Customer'
+                  success:
+                    $ref: '#/components/schemas/Success'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  pagination:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Customers
+      operationId: getCustomersList
+      x-operation-id-source: derived
+  /customers/get:
+    get:
+      summary: Buscar um cliente
+      description: 'Retorna os dados de um cliente específico baseado em filtros.
+
+
+        Você pode usar essa rota para buscar um cliente por ID ou outros critérios.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único público do cliente
+        required: false
+        schema:
+          type: string
+          example: cust_aebxkhDZNaMmJeKsy0AHS0FQ
+      - name: email
+        in: query
+        description: E-mail do cliente
+        required: false
+        schema:
+          type: string
+          format: email
+          example: daniel_lima@abacatepay.com
+      - name: taxId
+        in: query
+        description: CPF ou CNPJ do cliente
+        required: false
+        schema:
+          type: string
+          example: '11144477735'
+      responses:
+        '200':
+          description: Cliente encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Cliente não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o cliente não foi encontrado.
+                    example: Cliente não encontrado.
+      tags:
+      - Customers
+      operationId: getCustomersGet
+      x-operation-id-source: derived
+  /customers/delete:
+    post:
+      summary: Deletar um cliente
+      description: 'Remove um cliente da sua loja.
+
+
+        Esta operação é irreversível. Use com cuidado.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Identificador único público do cliente a ser deletado
+        schema:
+          type: string
+          example: cust_aebxkhDZNaMmJeKsy0AHS0FQ
+      responses:
+        '200':
+          description: Cliente deletado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+                  error:
+                    type: string
+                    example: null
+                    nullable: true
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Cliente não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o cliente não foi encontrado.
+                    example: Cliente não encontrado.
+      tags:
+      - Customers
+      operationId: postCustomersDelete
+      x-operation-id-source: derived
+components:
+  parameters:
+    QueryStartDate:
+      name: startDate
+      in: query
+      description: 'Filtra registros criados a partir desta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (00:00 do dia inicial).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-01'
+    QueryEndDate:
+      name: endDate
+      in: query
+      description: 'Filtra registros criados até esta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (23:59:59.999 do dia final).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-31'
+    QueryLimit:
+      name: limit
+      in: query
+      description: Quantidade de itens por página (1-100).
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    QueryAfter:
+      name: after
+      in: query
+      description: Cursor para buscar itens após este ponto (use o `publicId` retornado em `pagination.next`).
+      required: false
+      schema:
+        type: string
+    QueryBefore:
+      name: before
+      in: query
+      description: Cursor para buscar itens antes deste ponto (use o `publicId` retornado em `pagination.before`).
+      required: false
+      schema:
+        type: string
+  schemas:
+    Customer:
+      type: object
+      description: Os dados do seu cliente.
+      required:
+      - id
+      - devMode
+      - name
+      - cellphone
+      - email
+      - taxId
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Identificador único público do cliente
+          example: cust_aebxkhDZNaMmJeKsy0AHS0FQ
+        devMode:
+          type: boolean
+          description: Indica se o cliente foi criado em ambiente de testes.
+          example: true
+        name:
+          type: string
+          description: Nome completo do cliente
+          example: Daniel Lima
+        cellphone:
+          type: string
+          description: Celular do cliente
+          example: (11) 4002-8922
+        email:
+          type: string
+          description: E-mail do cliente
+          example: daniel_lima@abacatepay.com
+        taxId:
+          type: string
+          description: CPF ou CNPJ do cliente
+          example: '11144477735'
+        country:
+          type: string
+          description: País do cliente
+          example: BR
+        zipCode:
+          type: string
+          description: CEP do cliente
+          example: 01310-100
+        metadata:
+          type: object
+          description: Metadados adicionais do cliente
+          additionalProperties: true
+          example:
+            source: landing-page
+            campaign: black-friday-2025
+    PaginationCursor:
+      type: object
+      description: Informações de paginação baseada em cursor.
+      required:
+      - hasMore
+      - next
+      - before
+      additionalProperties: false
+      properties:
+        hasMore:
+          type: boolean
+          description: Indica se existe uma próxima página.
+        next:
+          type: string
+          nullable: true
+          description: Cursor da próxima página (usar em `after`). `null` na última página.
+        before:
+          type: string
+          nullable: true
+          description: Cursor da página anterior (usar em `before`). `null` na primeira página.
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '

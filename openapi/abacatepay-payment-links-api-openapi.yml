@@ -1,0 +1,802 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Payment Links API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Payment Links
+paths:
+  /payment-links/create:
+    post:
+      summary: Criar um link de pagamento
+      description: Cria um link de pagamento (checkout com frequency MULTIPLE_PAYMENTS). Vários clientes podem pagar o mesmo link; não suporta customerId.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - items
+              additionalProperties: false
+              example:
+                items:
+                - id: prod-1234
+                  quantity: 2
+                methods:
+                - PIX
+                - CARD
+              properties:
+                items:
+                  type: array
+                  description: 'Lista de itens incluídos na cobrança.
+
+                    Este é o único campo obrigatório — o valor total é calculado a partir destes itens.
+
+                    '
+                  minItems: 1
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - id
+                    - quantity
+                    properties:
+                      id:
+                        type: string
+                        description: ID público do produto na sua loja.
+                        example: prod-1234
+                      quantity:
+                        type: integer
+                        description: Quantidade deste item.
+                        minimum: 1
+                        example: 2
+                methods:
+                  type: array
+                  description: Métodos de pagamento disponíveis. Padrão ["PIX", "CARD"].
+                  items:
+                    type: string
+                    enum:
+                    - PIX
+                    - CARD
+                    - BOLETO
+                  minItems: 1
+                  default:
+                  - PIX
+                  - CARD
+                  x-mint:
+                    hidden: true
+                returnUrl:
+                  type: string
+                  format: uri
+                  description: URL para onde o cliente será redirecionado ao clicar em "Voltar" no checkout.
+                  x-mint:
+                    hidden: true
+                completionUrl:
+                  type: string
+                  format: uri
+                  description: URL para onde o cliente será redirecionado após o pagamento ser concluído.
+                  x-mint:
+                    hidden: true
+                coupons:
+                  type: array
+                  description: 'Lista de cupons que podem ser utilizados nesta cobrança.
+
+
+                    **Exemplo**: `["ABKT10", "ABKT5", "PROMO10"]`
+
+                    '
+                  items:
+                    type: string
+                  maxItems: 50
+                  x-mint:
+                    hidden: true
+                externalId:
+                  type: string
+                  description: 'ID da cobrança no seu sistema, caso queira manter uma referência própria.
+
+
+                    **Exemplo**: `"seu_id_123"`
+
+                    '
+                  x-mint:
+                    hidden: true
+                dueDate:
+                  type: string
+                  format: date
+                  description: 'Data de vencimento do boleto no formato `YYYY-MM-DD` (ex: `"2026-08-15"`). Opcional. Só é válido quando `methods` inclui `BOLETO`; ignorado nos demais métodos.
+
+
+                    Se omitido, o vencimento padrão é de 3 dias úteis. Não pode ser data no passado. Máximo de 365 dias no futuro.
+
+                    '
+                  example: '2026-08-15'
+                  x-mint:
+                    hidden: true
+                interest:
+                  description: Juros por atraso, aplicados apenas quando `methods` inclui `BOLETO`. Ignorado para PIX/CARD.
+                  allOf:
+                  - $ref: '#/components/schemas/BoletoInterest'
+                  x-mint:
+                    hidden: true
+                fine:
+                  description: Multa por atraso, aplicada apenas quando `methods` inclui `BOLETO`. Ignorado para PIX/CARD.
+                  allOf:
+                  - $ref: '#/components/schemas/BoletoFine'
+                  x-mint:
+                    hidden: true
+                metadata:
+                  type: object
+                  description: "Metadados adicionais da cobrança. Campo livre para a sua aplicação.\n\n**Exemplo**:\n```json\n{\n  \"source\": \"landing-page-black-friday\",\n  \"campaign\": \"BF-2025\"\n}\n```\n"
+                  additionalProperties: true
+                  x-mint:
+                    hidden: true
+                card:
+                  type: object
+                  description: Configuração do pagamento por cartão. Só tem efeito quando `methods` inclui `CARD`.
+                  additionalProperties: false
+                  required:
+                  - maxInstallments
+                  properties:
+                    maxInstallments:
+                      type: integer
+                      description: Número máximo de parcelas oferecidas no checkout.
+                      minimum: 1
+                      maximum: 12
+                      example: 12
+                customerId:
+                  type: string
+                  description: 'ID de um cliente já cadastrado na sua loja.
+
+                    Se informado, o checkout será pré-preenchido com os dados deste cliente.
+
+
+                    **Exemplo**: `"cust_abcdefghij"`
+
+                    '
+                  x-mint:
+                    hidden: true
+                upSellProductId:
+                  type: string
+                  description: 'ID de um produto avulso (sem `cycle`) a ser ofertado como upsell após a conclusão do pagamento.
+
+
+                    O produto deve estar com `status: ACTIVE` e **não pode ter `cycle`** — apenas produtos de pagamento único são aceitos.
+
+
+                    **Exemplo**: `"prod_bump456xyz"`
+
+                    '
+                  x-mint:
+                    hidden: true
+      responses:
+        '200':
+          description: Link de pagamento criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Billing'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payment Links
+      operationId: postPaymentLinksCreate
+      x-operation-id-source: derived
+  /payment-links/list:
+    get:
+      summary: Listar links de pagamento
+      description: Lista apenas links de pagamento (checkouts com frequency MULTIPLE_PAYMENTS).
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/QueryAfter'
+      - $ref: '#/components/parameters/QueryBefore'
+      - $ref: '#/components/parameters/QueryLimit'
+      - $ref: '#/components/parameters/QueryStartDate'
+      - $ref: '#/components/parameters/QueryEndDate'
+      - name: id
+        in: query
+        description: Filtrar por identificador único do link de pagamento
+        required: false
+        schema:
+          type: string
+          example: bill_abc123xyz
+      - name: externalId
+        in: query
+        description: Filtrar por identificador do link no seu sistema
+        required: false
+        schema:
+          type: string
+          example: pedido-123
+      - name: status
+        in: query
+        description: Filtrar por status do link de pagamento
+        required: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+      - name: keyword
+        in: query
+        description: Busca textual livre
+        required: false
+        schema:
+          type: string
+      - name: customerId
+        in: query
+        description: Filtrar pelo identificador do cliente associado
+        required: false
+        schema:
+          type: string
+          example: cust_abc123xyz
+      - name: method
+        in: query
+        description: Filtrar por método de pagamento. Traz todo checkout que oferece este método, mesmo que ofereça outros também.
+        required: false
+        schema:
+          type: string
+          enum:
+          - PIX
+          - CARD
+          - BOLETO
+      responses:
+        '200':
+          description: Links de pagamento listados com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Lista de links de pagamento.
+                    items:
+                      $ref: '#/components/schemas/Billing'
+                  success:
+                    $ref: '#/components/schemas/Success'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  pagination:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          description: Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payment Links
+      operationId: getPaymentLinksList
+      x-operation-id-source: derived
+  /payment-links/get:
+    get:
+      summary: Buscar um link de pagamento
+      description: 'Retorna os dados de um link de pagamento específico (checkout com frequency MULTIPLE_PAYMENTS) usando o ID.
+
+
+        Informe ao menos um entre `id`, `externalId` e `customerId`. Checkouts de assinatura não são retornados por esta rota; use `GET /subscriptions/checkouts/get`.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do link de pagamento
+        required: false
+        schema:
+          type: string
+          example: bill_abc123xyz
+      - name: externalId
+        in: query
+        description: Identificador do Checkout no seu sistema
+        required: false
+        schema:
+          type: string
+          example: pedido-123
+      - name: customerId
+        in: query
+        description: Identificador do cliente associado
+        required: false
+        schema:
+          type: string
+          example: cust_abc123xyz
+      - name: method
+        in: query
+        description: Método de pagamento. Casa o checkout que oferece este método, mesmo que ofereça outros também.
+        required: false
+        schema:
+          type: string
+          enum:
+          - PIX
+          - CARD
+          - BOLETO
+      responses:
+        '200':
+          description: Link de pagamento encontrado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Billing'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Link de pagamento não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o link de pagamento não foi encontrado.
+                    example: Link de pagamento não encontrado.
+      tags:
+      - Payment Links
+      operationId: getPaymentLinksGet
+      x-operation-id-source: derived
+  /payment-links/refund:
+    post:
+      summary: Reembolsar pagamento de link
+      description: 'Reembolsa um pagamento realizado em um link de pagamento. O valor reembolsado é igual ao valor original da transação — reembolsos parciais não são suportados.
+
+
+        Cobranças de assinatura não podem ser reembolsadas pela API v2.'
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequestPaymentLink'
+      responses:
+        '200':
+          description: Reembolso criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Reembolso recusado por regra de negócio.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundError'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payment Links
+      operationId: postPaymentLinksRefund
+      x-operation-id-source: derived
+  /payment-links/delete:
+    post:
+      summary: Deletar um link de pagamento
+      description: 'Deleta um link de pagamento que ainda não foi pago.
+
+
+        Checkouts de assinatura não são excluídos por esta rota; use `POST /subscriptions/checkouts/delete`.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: query
+        description: Identificador único do link de pagamento
+        required: true
+        schema:
+          type: string
+          example: bill_abc123xyz
+      responses:
+        '200':
+          description: Link de pagamento deletado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Billing'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payment Links
+      operationId: postPaymentLinksDelete
+      x-operation-id-source: derived
+components:
+  schemas:
+    BoletoFine:
+      type: object
+      description: 'Multa por atraso aplicada uma única vez após o vencimento do boleto. One-time late fine applied after the due date. Aplica-se apenas a `method: "BOLETO"`; ignorado nos demais métodos.'
+      additionalProperties: false
+      required:
+      - value
+      - type
+      properties:
+        value:
+          type: integer
+          minimum: 0
+          description: 'Quando `type = "PERCENTAGE"`: centésimos de percentual sobre o valor do boleto (`200` = 2%). Quando `type = "FIXED"`: valor fixo em centavos (`1000` = R$ 10,00). Quando `0` ou omitido, sem multa.
+
+            EN: With `type: "PERCENTAGE"`, value is in hundredths of a percent (`200` = 2%). With `type: "FIXED"`, value is in cents (`1000` = R$ 10.00). `0` or omitted disables the fine.'
+          example: 200
+        type:
+          type: string
+          description: 'Tipo da multa. `PERCENTAGE` aplica percentual sobre o valor do boleto; `FIXED` aplica um valor fixo em centavos.
+
+            EN: Fine type. `PERCENTAGE` applies a percent of the boleto amount; `FIXED` applies a fixed amount in cents.'
+          enum:
+          - PERCENTAGE
+          - FIXED
+          example: PERCENTAGE
+    RefundResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID da transação de reembolso criada.
+              example: tran_abc123xyz
+            status:
+              type: string
+              description: Status da transação de reembolso.
+              example: COMPLETE
+            amount:
+              type: number
+              description: Valor reembolsado, em centavos.
+              example: 10000
+            reason:
+              type: string
+              nullable: true
+              description: Motivo informado na requisição; `null` quando não enviado.
+              example: Pedido cancelado pelo cliente.
+            originalId:
+              type: string
+              description: O `id` enviado na requisição.
+              example: bill_abc123xyz
+            createdAt:
+              type: string
+              format: date-time
+              description: Data de criação do reembolso.
+              example: '2026-10-05T14:30:00.000Z'
+        error:
+          type: string
+          nullable: true
+          example: null
+        success:
+          $ref: '#/components/schemas/Success'
+    BoletoInterest:
+      type: object
+      description: 'Juros por atraso aplicados ao boleto após o vencimento. Late interest applied to the boleto after the due date. Aplica-se apenas a `method: "BOLETO"`; ignorado nos demais métodos.'
+      additionalProperties: false
+      required:
+      - value
+      properties:
+        value:
+          type: integer
+          minimum: 0
+          description: 'Percentual de juros ao mês em centésimos de percentual (`100` = 1% ao mês, `250` = 2,5% ao mês). Quando `0` ou omitido, sem juros. Calculado pro rata die após o vencimento.
+
+            EN: Monthly late-interest rate in hundredths of a percent (`100` = 1%/month). Accrues pro rata die after the due date; `0` or omitted disables interest.'
+          example: 100
+    Billing:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identificador único do Checkout.
+          example: bill_abc123xyz
+        externalId:
+          type: string
+          nullable: true
+          description: ID do Checkout no seu sistema.
+          example: pedido-123
+        url:
+          type: string
+          format: uri
+          description: URL onde o usuário pode concluir o pagamento.
+          example: https://app.abacatepay.com/pay/bill_abc123xyz
+        amount:
+          type: number
+          description: Valor total a ser pago em centavos.
+          example: 10000
+        paidAmount:
+          type: number
+          nullable: true
+          description: Valor já pago em centavos. Null se ainda não foi pago.
+          example: null
+        items:
+          type: array
+          description: Lista de itens no Checkout.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID do produto.
+                example: prod_456
+              quantity:
+                type: integer
+                description: Quantidade do item.
+                example: 2
+        status:
+          type: string
+          description: Status atual do Checkout.
+          enum:
+          - PENDING
+          - EXPIRED
+          - CANCELLED
+          - PAID
+          - REFUNDED
+          example: PENDING
+        coupons:
+          type: array
+          description: Lista de cupons aplicados no Checkout.
+          items:
+            type: string
+          example: []
+        devMode:
+          type: boolean
+          description: Indica se a cobrança foi criada em ambiente de testes.
+          example: false
+        customerId:
+          type: string
+          nullable: true
+          description: ID do cliente associado ao Checkout.
+          example: null
+        returnUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL para onde o cliente será redirecionado ao clicar em "Voltar".
+          example: null
+        completionUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL para onde o cliente será redirecionado após o pagamento.
+          example: null
+        receiptUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL do comprovante de pagamento.
+          example: null
+        upSellProductId:
+          type: string
+          nullable: true
+          description: ID do produto de upsell vinculado ao Checkout. Null se nenhum produto de upsell foi informado na criação.
+          example: prod_bump456xyz
+        installmentsCount:
+          type: integer
+          nullable: true
+          description: Número de parcelas do pagamento quando realizado via Cartão de crédito com mais de uma parcela. `null` para pagamentos à vista ou realizados por outros métodos (PIX, Boleto).
+          example: 3
+        dueDate:
+          type: string
+          format: date
+          nullable: true
+          description: Data de vencimento do boleto (`YYYY-MM-DD`). `null` quando não foi configurada ou quando o método de pagamento não é BOLETO.
+          example: '2026-08-15'
+        interest:
+          nullable: true
+          description: Juros por atraso configurados para o boleto. `null` quando não foi configurado ou quando o método de pagamento não é BOLETO.
+          allOf:
+          - $ref: '#/components/schemas/BoletoInterest'
+        fine:
+          nullable: true
+          description: Multa por atraso configurada para o boleto. `null` quando não foi configurada ou quando o método de pagamento não é BOLETO.
+          allOf:
+          - $ref: '#/components/schemas/BoletoFine'
+        metadata:
+          type: object
+          description: Metadados adicionais do Checkout.
+          additionalProperties: true
+          example: {}
+        createdAt:
+          type: string
+          format: date-time
+          description: Data e hora de criação do Checkout.
+          example: '2024-11-04T18:38:28.573Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data e hora da última atualização do Checkout.
+          example: '2024-11-04T18:38:28.573Z'
+    PaginationCursor:
+      type: object
+      description: Informações de paginação baseada em cursor.
+      required:
+      - hasMore
+      - next
+      - before
+      additionalProperties: false
+      properties:
+        hasMore:
+          type: boolean
+          description: Indica se existe uma próxima página.
+        next:
+          type: string
+          nullable: true
+          description: Cursor da próxima página (usar em `after`). `null` na última página.
+        before:
+          type: string
+          nullable: true
+          description: Cursor da página anterior (usar em `before`). `null` na primeira página.
+    RefundRequestPaymentLink:
+      type: object
+      required:
+      - id
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: 'ID da cobrança de um pagamento específico do link (`pix_char_`, `card_` ou `char_`). O `bill_` do link é recusado. O ID de cada pagamento aparece no dashboard, no detalhe das transações do link.
+
+            '
+          example: pix_char_abc123xyz
+        reason:
+          type: string
+          maxLength: 500
+          description: Motivo do reembolso. Aparece no histórico da transação.
+          example: Cobrança duplicada.
+    RefundError:
+      type: object
+      properties:
+        data:
+          nullable: true
+          example: null
+        error:
+          type: string
+          description: Código do erro de reembolso.
+          enum:
+          - LOCK_NOT_ACQUIRED
+          - TRANSACTION_NOT_FOUND
+          - TRANSACTION_NOT_REFUNDABLE
+          - TRANSACTION_UNDER_DISPUTE
+          - INVALID_METHOD
+          - INSUFFICIENT_FUNDS
+          - STORE_NOT_FOUND
+          - REFUND_REQUEST_FAILED
+          - REFUND_CONFIRMATION_FAILED
+          example: TRANSACTION_UNDER_DISPUTE
+        success:
+          type: boolean
+          example: false
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+  parameters:
+    QueryStartDate:
+      name: startDate
+      in: query
+      description: 'Filtra registros criados a partir desta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (00:00 do dia inicial).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-01'
+    QueryEndDate:
+      name: endDate
+      in: query
+      description: 'Filtra registros criados até esta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (23:59:59.999 do dia final).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-31'
+    QueryLimit:
+      name: limit
+      in: query
+      description: Quantidade de itens por página (1-100).
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    QueryAfter:
+      name: after
+      in: query
+      description: Cursor para buscar itens após este ponto (use o `publicId` retornado em `pagination.next`).
+      required: false
+      schema:
+        type: string
+    QueryBefore:
+      name: before
+      in: query
+      description: Cursor para buscar itens antes deste ponto (use o `publicId` retornado em `pagination.before`).
+      required: false
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '

@@ -1,0 +1,463 @@
+openapi: 3.2.0
+info:
+  title: AbacatePay Payouts API
+  description: API para gerenciamento de cobranças e pagamentos usando o AbacatePay.
+  version: 1.0.0
+servers:
+- url: https://api.abacatepay.com/v2
+  description: Único servidor para os ambientes de produção e sandbox.
+tags:
+- name: Payouts
+paths:
+  /payouts/create:
+    post:
+      summary: Criar um payout
+      description: Saca o saldo da sua conta AbacatePay para uma chave PIX do mesmo CNPJ da conta. Para enviar dinheiro a terceiros, use `POST /pix/send`.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Dados necessários para criar um payout.
+              required:
+              - amount
+              - pix
+              additionalProperties: false
+              example:
+                amount: 10000
+                externalId: saque-123
+                pix:
+                  key: '11987654321'
+                  type: PHONE
+              properties:
+                amount:
+                  type: number
+                  description: Valor do payout em centavos, mínimo `350` (R$ 3,50). A taxa (`platformFee`) é descontada desse valor.
+                  minimum: 350
+                  example: 10000
+                description:
+                  type: string
+                  description: Descrição opcional do payout.
+                  example: Saque para conta bancária
+                  x-mint:
+                    hidden: true
+                externalId:
+                  type: string
+                  description: Identificador do payout no seu sistema.
+                  example: saque-123
+                pix:
+                  type: object
+                  description: Chave PIX de destino do payout.
+                  required:
+                  - key
+                  - type
+                  additionalProperties: false
+                  properties:
+                    key:
+                      type: string
+                      description: Chave PIX de destino.
+                      example: '11987654321'
+                    type:
+                      type: string
+                      description: Tipo da chave PIX.
+                      enum:
+                      - CPF
+                      - CNPJ
+                      - PHONE
+                      - EMAIL
+                      - RANDOM
+                      - BR_CODE
+                      example: PHONE
+      responses:
+        '200':
+          description: Payout criado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: Dados da transação de payout criada.
+                    properties:
+                      id:
+                        type: string
+                        description: Identificador único da transação.
+                        example: tran_abc123xyz
+                      status:
+                        type: string
+                        description: Status atual da transação.
+                        enum:
+                        - COMPLETE
+                        - FAILED
+                        example: COMPLETE
+                      devMode:
+                        type: boolean
+                        description: Indica se a transação foi criada em ambiente de testes.
+                        example: false
+                      receiptUrl:
+                        type: string
+                        format: uri
+                        description: URL do comprovante da transação.
+                        example: https://app.abacatepay.com/receipt/tran_abc123xyz
+                      amount:
+                        type: number
+                        description: Valor da transação em centavos.
+                        example: 10000
+                      platformFee:
+                        type: number
+                        description: Taxa da plataforma em centavos, descontada do `amount`.
+                        example: 80
+                      externalId:
+                        type: string
+                        description: Identificador externo da transação.
+                        example: saque-123
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Data de criação da transação.
+                        example: '2024-11-04T18:38:28.573Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Data de atualização da transação.
+                        example: '2024-11-04T18:38:28.573Z'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payouts
+      operationId: postPayoutsCreate
+      x-operation-id-source: derived
+  /payouts/get:
+    get:
+      summary: Buscar payout
+      description: Permite que você recupere os detalhes de um payout específico usando o externalId.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: externalId
+        in: query
+        description: Identificador único do payout em seu sistema.
+        required: false
+        schema:
+          type: string
+          example: saque-123
+      - name: id
+        in: query
+        description: Identificador único do payout
+        required: false
+        schema:
+          type: string
+          example: payout_abc123xyz
+      responses:
+        '200':
+          description: Detalhes do payout retornados com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: Dados da transação de payout.
+                    properties:
+                      id:
+                        type: string
+                        description: Identificador único da transação.
+                        example: tran_abc123xyz
+                      status:
+                        type: string
+                        description: Status atual da transação.
+                        enum:
+                        - COMPLETE
+                        - FAILED
+                        example: COMPLETE
+                      devMode:
+                        type: boolean
+                        description: Indica se a transação foi criada em ambiente de testes.
+                        example: false
+                      receiptUrl:
+                        type: string
+                        format: uri
+                        description: URL do comprovante da transação.
+                        example: https://app.abacatepay.com/receipt/tran_abc123xyz
+                      amount:
+                        type: number
+                        description: Valor da transação em centavos.
+                        example: 10000
+                      platformFee:
+                        type: number
+                        description: Taxa da plataforma em centavos, descontada do `amount`.
+                        example: 80
+                      externalId:
+                        type: string
+                        description: Identificador externo da transação.
+                        example: saque-123
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Data de criação da transação.
+                        example: '2024-11-04T18:38:28.573Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Data de atualização da transação.
+                        example: '2024-11-04T19:15:42.123Z'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  success:
+                    $ref: '#/components/schemas/Success'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+        '404':
+          description: Saque não encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    nullable: true
+                    example: null
+                  error:
+                    type: string
+                    description: Mensagem de erro indicando que o saque não foi encontrado.
+                    example: Saque não encontrado com o externalId fornecido.
+      tags:
+      - Payouts
+      operationId: getPayoutsGet
+      x-operation-id-source: derived
+  /payouts/list:
+    get:
+      summary: Listar payouts
+      description: Permite que você recupere uma lista de todos os payouts criados com suporte a paginação.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/QueryAfter'
+      - $ref: '#/components/parameters/QueryBefore'
+      - $ref: '#/components/parameters/QueryLimit'
+      - $ref: '#/components/parameters/QueryStartDate'
+      - $ref: '#/components/parameters/QueryEndDate'
+      - name: id
+        in: query
+        description: Filtrar por identificador único da transação
+        required: false
+        schema:
+          type: string
+          example: tran_123456
+      responses:
+        '200':
+          description: Lista de payouts retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Lista de saques criados.
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                  success:
+                    $ref: '#/components/schemas/Success'
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  pagination:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          description: Não autorizado. Falha na autenticação.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensagem de erro descrevendo o motivo da falha na autenticação.
+                    example: Token de autenticação inválido ou ausente.
+      tags:
+      - Payouts
+      operationId: getPayoutsList
+      x-operation-id-source: derived
+components:
+  parameters:
+    QueryStartDate:
+      name: startDate
+      in: query
+      description: 'Filtra registros criados a partir desta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (00:00 do dia inicial).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-01'
+    QueryEndDate:
+      name: endDate
+      in: query
+      description: 'Filtra registros criados até esta data (inclusive). Formato `YYYY-MM-DD`. O intervalo é interpretado no fuso horário `America/Sao_Paulo` (23:59:59.999 do dia final).
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2026-01-31'
+    QueryLimit:
+      name: limit
+      in: query
+      description: Quantidade de itens por página (1-100).
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+        example: 100
+    QueryAfter:
+      name: after
+      in: query
+      description: Cursor para buscar itens após este ponto (use o `publicId` retornado em `pagination.next`).
+      required: false
+      schema:
+        type: string
+    QueryBefore:
+      name: before
+      in: query
+      description: Cursor para buscar itens antes deste ponto (use o `publicId` retornado em `pagination.before`).
+      required: false
+      schema:
+        type: string
+  schemas:
+    Success:
+      type: boolean
+      description: Se a requisição obteve sucesso ou não.
+      example: true
+    Transaction:
+      type: object
+      description: Dados de uma transação (pagamento ou saque).
+      properties:
+        id:
+          type: string
+          description: Identificador único da transação.
+          example: tran_123456
+        status:
+          type: string
+          description: Status atual da transação.
+          enum:
+          - COMPLETE
+          - FAILED
+          example: COMPLETE
+        devMode:
+          type: boolean
+          description: Indica se a transação foi criada em ambiente de testes.
+          example: true
+        receiptUrl:
+          type: string
+          format: uri
+          description: URL do comprovante da transação.
+          example: https://app.abacatepay.com/receipt/tran_123456
+        kind:
+          type: string
+          description: Tipo da transação.
+          enum:
+          - PAYMENT
+          - WITHDRAW
+          example: WITHDRAW
+          default: WITHDRAW
+        amount:
+          type: number
+          description: Valor da transação em centavos.
+          example: 5000
+        platformFee:
+          type: number
+          description: Taxa da plataforma em centavos, descontada do `amount`.
+          example: 80
+        externalId:
+          type: string
+          description: Identificador externo da transação.
+          example: withdraw-1234
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação da transação.
+          example: '2025-03-24T21:50:20.772Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data de atualização da transação.
+          example: '2025-03-24T21:50:20.772Z'
+      required:
+      - id
+      - status
+      - devMode
+      - receiptUrl
+      - kind
+      - amount
+      - platformFee
+      - createdAt
+      - updatedAt
+    PaginationCursor:
+      type: object
+      description: Informações de paginação baseada em cursor.
+      required:
+      - hasMore
+      - next
+      - before
+      additionalProperties: false
+      properties:
+        hasMore:
+          type: boolean
+          description: Indica se existe uma próxima página.
+        next:
+          type: string
+          nullable: true
+          description: Cursor da próxima página (usar em `after`). `null` na última página.
+        before:
+          type: string
+          nullable: true
+          description: Cursor da página anterior (usar em `before`). `null` na primeira página.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Todas as requisições devem incluir sua chave de API no header Authorization usando o formato `Bearer <abacatepay-api-key>`. Sem esse header a requisição será rejeitada.
+
+
+        Saiba mais sobre como criar e usar chaves de API na [documentação de autenticação](/pages/authentication).
+
+        '
