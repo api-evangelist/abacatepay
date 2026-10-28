@@ -1,4 +1,4 @@
-# AbacatePay (abacatepay)
+# AbacatePay
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,154 +66,133 @@
 
 AbacatePay is a Brazilian payment gateway built for developers and indie hackers, focused on instant Pix payments. Its REST API lets you create billings and charges, generate and check Pix QR Codes, manage customers and coupons, request withdrawals, and receive webhooks - charging a flat per-transaction Pix fee with funds available immediately.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/abacatepay/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/abacatepay/refs/heads/main/apis.yml)
+**Areas:** Payments · Pix · Brazil · Fintech · Developers
 
-## Tags
+## AbacatePay on APIs.io
 
-- Payments
-- Pix
-- Brazil
-- FinTech
-- Developers
+Everything profiled for AbacatePay is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/abacatepay/](https://apis.io/providers/abacatepay/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (6)
 
-- **Created:** 2026-06-21
-- **Modified:** 2026-06-21
+- [AbacatePay Webhooks](https://apis.io/apis/abacatepay/abacatepay-webhooks-api/) — Outbound webhook event notifications (billing.created, billing.paid, billing.refunded, billing.failed, subscription.created, subscription.canceled)…
+- [AbacatePay Billing API](https://apis.io/apis/abacatepay/abacatepay-billing-api/) — Create and list billings (charges) with a shareable checkout URL.
+- [AbacatePay Coupon API](https://apis.io/apis/abacatepay/abacatepay-coupon-api/) — Create and list discount coupons.
+- [AbacatePay Customer API](https://apis.io/apis/abacatepay/abacatepay-customer-api/) — Create and list customers (clients).
+- [AbacatePay Pix QR Code API](https://apis.io/apis/abacatepay/abacatepay-pix-qr-code-api/) — Create, check, and simulate dynamic Pix QR Code payments.
+- [AbacatePay Withdraw API](https://apis.io/apis/abacatepay/abacatepay-withdraw-api/) — Create, retrieve, and list withdrawals (payouts) to a Pix key.
 
-## APIs
+### Published properties
 
-### AbacatePay Billing and Charges API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Create one-time and recurring billings (charges) backed by a shareable checkout URL, supporting Pix and other payment methods, products, coupons, and customer association, plus listing of existing billings.
+#### MCP servers (1)
 
-- **Human URL:** [https://docs.abacatepay.com/pages/v1/introduction](https://docs.abacatepay.com/pages/v1/introduction)
-- **Base URL:** `https://api.abacatepay.com/v1`
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags
+- [abacatepay](https://apis.io/servers/abacatepay/abacatepay/)
 
-- Billing
-- Charges
-- Checkout
+#### Agentic access (1)
 
-#### Properties
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [Documentation](https://docs.abacatepay.com/pages/payment/create)
-- [API Reference](https://docs.abacatepay.com/pages/reference/introduction)
-- [OpenAPI](openapi/abacatepay-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/abacatepay.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/abacatepay.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Abacatepay Agentic Access](https://apis.io/agentic-access/abacatepay/abacatepay-agentic-access/)
 
-### AbacatePay Pix QR Code API
+#### Collections (6)
 
-Create dynamic Pix QR Codes (BR Code copy-and-paste and base64 image), check payment status, and simulate payments in dev mode for instant Pix collection.
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://docs.abacatepay.com/pages/v1/introduction](https://docs.abacatepay.com/pages/v1/introduction)
-- **Base URL:** `https://api.abacatepay.com/v1`
+- [AbacatePay API](https://apis.io/collections/abacatepay/open-abacatepay/)
+- [AbacatePay Billing API](https://apis.io/collections/abacatepay/open-abacatepay-billing-api/)
+- [AbacatePay Billing Coupon API](https://apis.io/collections/abacatepay/open-abacatepay-coupon-api/)
+- [AbacatePay Billing Customer API](https://apis.io/collections/abacatepay/open-abacatepay-customer-api/)
+- [AbacatePay Billing Pix QR Code API](https://apis.io/collections/abacatepay/open-abacatepay-pix-qr-code-api/)
+- [AbacatePay Billing Withdraw API](https://apis.io/collections/abacatepay/open-abacatepay-withdraw-api/)
 
-#### Tags
+#### Security (2)
 
-- Pix
-- QR Code
-- Instant Payments
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Properties
+- [Abacatepay Authentication](https://apis.io/security/abacatepay/abacatepay-authentication/)
+- [Abacatepay Domain Security](https://apis.io/security/abacatepay/abacatepay-domain-security/)
 
-- [Documentation](https://docs.abacatepay.com/pages/payment/create)
-- [API Reference](https://docs.abacatepay.com/pages/reference/introduction)
-- [OpenAPI](openapi/abacatepay-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/abacatepay.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/abacatepay.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Plans and pricing (1)
 
-### AbacatePay Customers API
+Published plans, tiers and prices.
 
-Create and list customers (clients) with name, cellphone, email, and Brazilian tax ID (CPF/CNPJ) for association with billings and charges.
+- [Abacatepay Plans Pricing](https://apis.io/plans/abacatepay/abacatepay-plans-pricing/)
 
-- **Human URL:** [https://docs.abacatepay.com/pages/client/create](https://docs.abacatepay.com/pages/client/create)
-- **Base URL:** `https://api.abacatepay.com/v1`
+#### Rate limits (1)
 
-#### Tags
+Published request limits.
 
-- Customers
-- Clients
+- [Abacatepay Rate Limits](https://apis.io/rate-limits/abacatepay/abacatepay-rate-limits/)
 
-#### Properties
+#### FinOps (1)
 
-- [Documentation](https://docs.abacatepay.com/pages/client/create)
-- [API Reference](https://docs.abacatepay.com/pages/reference/introduction)
-- [OpenAPI](openapi/abacatepay-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/abacatepay.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/abacatepay.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+What the API costs to run, by operation.
 
-### AbacatePay Coupons API
+- [Abacatepay Finops](https://apis.io/finops/abacatepay/abacatepay-finops/)
 
-Create and list discount coupons with percentage or fixed-amount discount kinds, redemption limits, and metadata for use in billings and checkout.
+## Where to find this API
 
-- **Human URL:** [https://docs.abacatepay.com/pages/reference/introduction](https://docs.abacatepay.com/pages/reference/introduction)
-- **Base URL:** `https://api.abacatepay.com/v1`
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-#### Tags
-
-- Coupons
-- Discounts
-
-#### Properties
-
-- [Documentation](https://docs.abacatepay.com/pages/reference/introduction)
-- [API Reference](https://docs.abacatepay.com/pages/reference/introduction)
-- [OpenAPI](openapi/abacatepay-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/abacatepay.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/abacatepay.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### AbacatePay Withdraw API
-
-Request withdrawals (payouts) of available balance to a Pix key, and retrieve or list withdrawal transactions by external ID.
-
-- **Human URL:** [https://docs.abacatepay.com/pages/reference/introduction](https://docs.abacatepay.com/pages/reference/introduction)
-- **Base URL:** `https://api.abacatepay.com/v1`
-
-#### Tags
-
-- Withdraw
-- Payout
-- Pix
-
-#### Properties
-
-- [Documentation](https://docs.abacatepay.com/pages/reference/introduction)
-- [API Reference](https://docs.abacatepay.com/pages/reference/introduction)
-- [OpenAPI](openapi/abacatepay-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/abacatepay.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/abacatepay.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### AbacatePay Webhooks
-
-Outbound webhook event notifications (billing.created, billing.paid, billing.refunded, billing.failed, subscription.created, subscription.canceled) delivered with a webhookSecret query string and HMAC-SHA256 signature for verification.
-
-- **Human URL:** [https://docs.abacatepay.com/pages/v1/webhooks](https://docs.abacatepay.com/pages/v1/webhooks)
-- **Base URL:** `https://api.abacatepay.com/v1`
-
-#### Tags
-
-- Webhooks
-- Events
-- Notifications
-
-#### Properties
-
-- [Documentation](https://docs.abacatepay.com/pages/v1/webhooks)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/AbacatePay)
-- [LinkedIn](https://www.linkedin.com/company/abacatepay)
 - [Website](https://www.abacatepay.com)
 - [Documentation](https://docs.abacatepay.com)
-- [Plans](plans/abacatepay-plans-pricing.yml)
-- [Rate Limits](rate-limits/abacatepay-rate-limits.yml)
-- [Fin Ops](finops/abacatepay-finops.yml)
+- [Blog](https://www.abacatepay.com/blog)
+- [GitHub](https://github.com/AbacatePay)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 23.6** — emerging · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 30.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 5.3 |
+
+**Agent readiness 42.7** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 10.7** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/abacatepay/](https://apis.io/providers/abacatepay/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for AbacatePay: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/abacatepay/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
