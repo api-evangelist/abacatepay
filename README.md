@@ -72,7 +72,7 @@ AbacatePay is a Brazilian payment gateway built for developers and indie hackers
 
 Everything profiled for AbacatePay is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/abacatepay/](https://apis.io/providers/abacatepay/)** — or go straight to one of the APIs or properties below.
 
-### APIs (6)
+### APIs (20)
 
 - [AbacatePay Webhooks](https://apis.io/apis/abacatepay/abacatepay-webhooks-api/) — Outbound webhook event notifications (billing.created, billing.paid, billing.refunded, billing.failed, subscription.created, subscription.canceled)…
 - [AbacatePay Billing API](https://apis.io/apis/abacatepay/abacatepay-billing-api/) — Create and list billings (charges) with a shareable checkout URL.
@@ -80,6 +80,20 @@ Everything profiled for AbacatePay is published on APIs.io rather than in this r
 - [AbacatePay Customer API](https://apis.io/apis/abacatepay/abacatepay-customer-api/) — Create and list customers (clients).
 - [AbacatePay Pix QR Code API](https://apis.io/apis/abacatepay/abacatepay-pix-qr-code-api/) — Create, check, and simulate dynamic Pix QR Code payments.
 - [AbacatePay Withdraw API](https://apis.io/apis/abacatepay/abacatepay-withdraw-api/) — Create, retrieve, and list withdrawals (payouts) to a Pix key.
+- [AbacatePay Bank Statement API](https://apis.io/apis/abacatepay/abacatepay-bank-statement-api/) — The Bank Statement API from AbacatePay — 1 operation(s) for bank statement.
+- [AbacatePay Checkouts API](https://apis.io/apis/abacatepay/abacatepay-checkouts-api/) — The Checkouts API from AbacatePay — 5 operation(s) for checkouts.
+- [AbacatePay Coupons API](https://apis.io/apis/abacatepay/abacatepay-coupons-api/) — The Coupons API from AbacatePay — 5 operation(s) for coupons.
+- [AbacatePay Customer Portal API](https://apis.io/apis/abacatepay/abacatepay-customer-portal-api/) — The Customer Portal API from AbacatePay — 1 operation(s) for customer portal.
+- [AbacatePay Customers API](https://apis.io/apis/abacatepay/abacatepay-customers-api/) — The Customers API from AbacatePay — 4 operation(s) for customers.
+- [AbacatePay Payment Links API](https://apis.io/apis/abacatepay/abacatepay-payment-links-api/) — The Payment Links API from AbacatePay — 5 operation(s) for payment links.
+- [AbacatePay Payouts API](https://apis.io/apis/abacatepay/abacatepay-payouts-api/) — The Payouts API from AbacatePay — 3 operation(s) for payouts.
+- [AbacatePay Pix API](https://apis.io/apis/abacatepay/abacatepay-pix-api/) — The Pix API from AbacatePay — 3 operation(s) for pix.
+- [AbacatePay Products API](https://apis.io/apis/abacatepay/abacatepay-products-api/) — The Products API from AbacatePay — 4 operation(s) for products.
+- [AbacatePay Public Mrr API](https://apis.io/apis/abacatepay/abacatepay-public-mrr-api/) — The Public Mrr API from AbacatePay — 4 operation(s) for public mrr.
+- [AbacatePay Stores API](https://apis.io/apis/abacatepay/abacatepay-stores-api/) — The Stores API from AbacatePay — 2 operation(s) for stores.
+- [AbacatePay Subscriptions API](https://apis.io/apis/abacatepay/abacatepay-subscriptions-api/) — The Subscriptions API from AbacatePay — 9 operation(s) for subscriptions.
+- [AbacatePay Transparents API](https://apis.io/apis/abacatepay/abacatepay-transparents-api/) — The Transparents API from AbacatePay — 6 operation(s) for transparents.
+- [AbacatePay Webhooks API](https://apis.io/apis/abacatepay/abacatepay-webhooks-api/) — The Webhooks API from AbacatePay — 4 operation(s) for webhooks.
 
 ### Published properties
 
@@ -95,7 +109,7 @@ Model Context Protocol servers that expose the API to agents.
 
 Which operations an agent can call, which act, and which need a human in the loop.
 
-- [Abacatepay Agentic Access](https://apis.io/agentic-access/abacatepay/abacatepay-agentic-access/)
+- [AbacatePay Agentic Access](https://apis.io/agentic-access/abacatepay/abacatepay-agentic-access/)
 
 #### Collections (6)
 
@@ -108,30 +122,36 @@ Postman and Open Collection request collections.
 - [AbacatePay Billing Pix QR Code API](https://apis.io/collections/abacatepay/open-abacatepay-pix-qr-code-api/)
 - [AbacatePay Billing Withdraw API](https://apis.io/collections/abacatepay/open-abacatepay-withdraw-api/)
 
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [AbacatePay API Rules](https://apis.io/rules/abacatepay/abacatepay-rules/)
+
 #### Security (2)
 
 Authentication, trust centre, and vulnerability disclosure.
 
-- [Abacatepay Authentication](https://apis.io/security/abacatepay/abacatepay-authentication/)
-- [Abacatepay Domain Security](https://apis.io/security/abacatepay/abacatepay-domain-security/)
+- [AbacatePay Authentication](https://apis.io/security/abacatepay/abacatepay-authentication/)
+- [AbacatePay Domain Security](https://apis.io/security/abacatepay/abacatepay-domain-security/)
 
 #### Plans and pricing (1)
 
 Published plans, tiers and prices.
 
-- [Abacatepay Plans Pricing](https://apis.io/plans/abacatepay/abacatepay-plans-pricing/)
+- [AbacatePay Plans Pricing](https://apis.io/plans/abacatepay/abacatepay-plans-pricing/)
 
 #### Rate limits (1)
 
 Published request limits.
 
-- [Abacatepay Rate Limits](https://apis.io/rate-limits/abacatepay/abacatepay-rate-limits/)
+- [AbacatePay Rate Limits](https://apis.io/rate-limits/abacatepay/abacatepay-rate-limits/)
 
 #### FinOps (1)
 
 What the API costs to run, by operation.
 
-- [Abacatepay Finops](https://apis.io/finops/abacatepay/abacatepay-finops/)
+- [AbacatePay Finops](https://apis.io/finops/abacatepay/abacatepay-finops/)
 
 ## Where to find this API
 
@@ -144,29 +164,29 @@ Links to the company's own pages. This repository publishes no copy of their spe
 
 ## API Evangelist rating
 
-**Kin Score 23.6** — emerging · rubric 0.25.0 · scored 2026-10-23
+**Kin Score 30.6** — thin · rubric 0.28.1 · scored 2026-11-21
 
 | Facet | Score |
 |---|---|
-| Discoverability | 68.3 |
-| Contract quality | 30.0 |
-| Contract governance | 0.0 |
-| Operational transparency | 7.9 |
+| Discoverability | 75.0 |
+| Contract quality | 51.9 |
+| Contract governance | 13.6 |
+| Operational transparency | 9.5 |
 | Developer ergonomics | 32.1 |
-| Access clarity | 5.3 |
+| Access clarity | 4.3 |
 
-**Agent readiness 42.7** — agent-ready (gated down from agent-native)
+**Agent readiness 51.5** — agent-ready (gated down from agent-native)
 
 | Agent-readiness dimension | Result |
 |---|---|
 | Spec Presence | yes |
 | Agentic Access | derived (partial credit) |
-| Reversibility Documented | — |
+| Reversibility Documented | documented (partial credit) |
 | MCP Server | verified |
 | Auth Clarity | served (partial credit) |
 | Idempotency | — |
 | Error Semantics | — |
-| OpenAPI Examples | — |
+| OpenAPI Examples | verified |
 | Rate Limit Signal | derived (partial credit) |
 | Event Surface Described | — |
 | Agent Skills | — |
@@ -178,10 +198,14 @@ Links to the company's own pages. This repository publishes no copy of their spe
 | Protected Resource Metadata | verified |
 | Dynamic Client Registration | yes |
 | Agentic Commerce | — |
-| Pagination Ratio | na |
-| Operation Distinctiveness | na |
+| Pagination Ratio | paginated |
+| Operation Distinctiveness | distinct |
+| MCP Tool Quality | na |
+| Onboarding Descriptor | — |
+| Dns Aid Index | na |
+| Markdown Negotiation | yes |
 
-**Regulatory alignment 10.7** — Payments
+**Regulatory alignment 5.4** — Payments
 
 The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/abacatepay/](https://apis.io/providers/abacatepay/).
 
